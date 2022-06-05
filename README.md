@@ -51,9 +51,12 @@ Veb aplikacija za biblioteku bazirana na mikroservisnoj arhitekturi.
    - Mikroservis za korisnike - CRUD sa korisnicima, blokiranje korisnika, autorizacija - Go  
    - Mikroservis za rezervacije i iznajmljivanje - servis za rezervisanje i iznajmljivanje knjiga, pretplata na praćenje dostupnosti knjige - Go  
    - Mikroservis za komentare i ocene - servis za rad sa komentarima i ocenama - Go  
-   - Mikroservis za izveštaje - mikroservis za izveštaje - Rust  
+   - Mikroservis za izveštaje - mikroservis za kreiranje i pregled izveštaja - Rust  
    - Mikroservis za slanje mejlova - mikroservis za slanje mejlova korisnicima - Go  
    - Klijentska veb aplikacija - React.js  
 
+
    - Baza podataka - PostgreSQL
+
+*Moguće izmene servisa pre početka implementacije.
 
