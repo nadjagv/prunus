@@ -7,7 +7,7 @@ Veb aplikacija za biblioteku bazirana na mikroservisnoj arhitekturi.
    - pregled, pretraga, sortiranje, filtriranje knjiga
    - uvid u osnovne informacije o knjigama
  
-#### Registrovani korisnik
+#### Registrovani korisnik - Član
    - prijava na sistem
    - pregled i izmena profila
    - pregled, pretraga, sortiranje, filtriranje knjiga
