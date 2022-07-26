@@ -28,6 +28,7 @@ Veb aplikacija za biblioteku bazirana na mikroservisnoj arhitekturi.
    - iznajmljivanje knjige
    - produženje iznajmljivanja knjige
    - vraćanje knjige u biblioteku
+   - pruduženje članarine
    - odobravanje i odbijanje komentara
    - pristup izveštajima o iznajmljivanju knjiga, najpopularnijim knjigama, sumnjivim korisnicima (korisnici koji nisu vratili knjigu do traženog roka)
    - slanje opomene mejlom sumnjivim korisnicima
