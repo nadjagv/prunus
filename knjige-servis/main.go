@@ -1,17 +1,22 @@
 package main
 
 import (
-    "log"
+	// "log"
 
-    "github.com/gofiber/fiber/v2"
+	// "github.com/gofiber/fiber/v2"
+	util "knjige-servis/util"
 )
 
 func main() {
-    app := fiber.New()
 
-    app.Get("/", func (c *fiber.Ctx) error {
-        return c.SendString("Hello, World!")
-    })
+	util.KonektujPopuniDB()
 
-    log.Fatal(app.Listen(":3000"))
+	// app := fiber.New()
+
+	// app.Get("/", func (c *fiber.Ctx) error {
+	//     return c.SendString("Hello, World!")
+	// })
+
+	// log.Fatal(app.Listen(":3000"))
+
 }

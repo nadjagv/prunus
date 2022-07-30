@@ -3,10 +3,14 @@ package main
 import (
 	"log"
 
+	util "korisnici-servis/util"
+
 	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
+	util.KonektujPopuniDB()
+
 	app := fiber.New()
 
 	app.Get("/", func(c *fiber.Ctx) error {
@@ -14,4 +18,5 @@ func main() {
 	})
 
 	log.Fatal(app.Listen(":3000"))
+
 }
