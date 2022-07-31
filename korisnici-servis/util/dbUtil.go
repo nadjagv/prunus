@@ -26,13 +26,14 @@ var korisnici = []model.Korisnik{
 }
 
 var Database *gorm.DB
+var errDb error
 
 func KonektujPopuniDB() {
 
 	dsn := "host=localhost user=postgres password=admin dbname=prunus-korisnici-servis-db port=5432 sslmode=disable"
-	Database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		log.Fatal(err)
+	Database, errDb = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if errDb != nil {
+		log.Fatal(errDb)
 	} else {
 		fmt.Println("Konektovan na bazu.")
 	}

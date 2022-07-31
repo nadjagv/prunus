@@ -27,11 +27,12 @@ var knjige = []model.Knjiga{
 }
 
 var Database *gorm.DB
+var err error
 
 func KonektujPopuniDB() {
 
 	dsn := "host=localhost user=postgres password=admin dbname=prunus-knjige-servis-db port=5432 sslmode=disable"
-	Database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	Database, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err)
 	} else {
