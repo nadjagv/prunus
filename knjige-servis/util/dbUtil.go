@@ -3,7 +3,6 @@ package util
 import (
 	"fmt"
 	"log"
-	"time"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -19,7 +18,7 @@ var knjige = []model.Knjiga{
 		Opis:             "Gordost i predrasuda, nezaboravni klasik Džejn Ostin, donosi priču o slobodoumnoj devojci Elizabet Benet koja, kao i njene četiri sestre, mora da se uda za bogatog muža. Suočavajući se sa arogantim, imućnim gospodinom Darsijem, Elizabet se upušta u pronicljiva razmišljanja o životu, porodici i tradiciji, u jednom od najlepših ljubavnih romana svih vremena.",
 		Zanr:             model.ZanrEnum(1),
 		BrojStrana:       367,
-		GodinaNastanka:   time.Date(1813, time.January, 28, 0, 0, 0, 0, time.Local),
+		GodinaNastanka:   1813,
 		UkupnaKolicina:   10,
 		TrenutnoDostupno: 10,
 		ProsecnaOcena:    5.0,
