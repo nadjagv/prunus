@@ -51,7 +51,7 @@ func OtkrijEndpointe() {
 		if err != nil {
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
-		return c.Status(fiber.StatusOK).JSON(nil)
+		return c.SendStatus(fiber.StatusOK)
 	})
 
 	app.Put("/", func(c *fiber.Ctx) error {
@@ -65,7 +65,7 @@ func OtkrijEndpointe() {
 		if err != nil {
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
-		return c.Status(fiber.StatusOK).JSON(nil)
+		return c.SendStatus(fiber.StatusOK)
 	})
 
 	app.Delete("/:id", func(c *fiber.Ctx) error {
@@ -79,7 +79,7 @@ func OtkrijEndpointe() {
 		if err != nil {
 			return fiber.NewError(fiber.StatusNotFound, err.Error())
 		}
-		return c.Status(fiber.StatusOK).JSON(nil)
+		return c.SendStatus(fiber.StatusOK)
 	})
 
 	log.Fatal(app.Listen(":8081"))
