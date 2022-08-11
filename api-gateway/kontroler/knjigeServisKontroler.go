@@ -14,12 +14,12 @@ func RutirajKnjigeServis(app *fiber.App) {
 	var prefiks = "/knjige"
 	var knjigeServisUrl = "http://localhost:8081/"
 	app.Get(prefiks, func(c *fiber.Ctx) error {
-		authHeaderStr := string(c.Request().Header.Peek("Authorization"))
-		email, err := util.Autentifikuj(authHeaderStr[7:])
-		if err != nil {
-			return c.SendStatus(fiber.StatusUnauthorized)
-		}
-		print("Zahtev poslao: " + email + "\n")
+		// authHeaderStr := string(c.Request().Header.Peek("Authorization"))
+		// email, err := util.Autentifikuj(authHeaderStr[7:])
+		// if err != nil {
+		// 	return c.SendStatus(fiber.StatusUnauthorized)
+		// }
+		// print("Zahtev poslao: " + email + "\n")
 		response, err := http.Get(knjigeServisUrl)
 		if err != nil {
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
