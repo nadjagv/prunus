@@ -22,13 +22,13 @@ const KnjigePregled = () =>{
         <div>
 
             {knjige.length > 0 ? (
-                <div>
+                <div className = "container">
                     {knjige.map((knjiga) => (
                         <KnjigaKartica knjiga={knjiga}/>
                     ))}
                 </div>
             ):(
-                <div>
+                <div className = "empty">
                     <h2>Nema knjiga za pregled.</h2>
                 </div>
             )}
