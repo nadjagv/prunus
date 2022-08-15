@@ -1,10 +1,13 @@
 import React, {useEffect, useState} from "react";
 import KnjigaKartica from "./KnjigaKartica";
+import {useNavigate} from "react-router-dom"
 
 const GATEWAY_URL = "http://localhost:8080/knjige"
 
 const KnjigePregled = () =>{
     const [knjige, setKnjige] = useState([])
+
+    const navigate = useNavigate()
 
     useEffect(()=>{
         preuzmiSve()
@@ -24,7 +27,9 @@ const KnjigePregled = () =>{
             {knjige.length > 0 ? (
                 <div className = "container">
                     {knjige.map((knjiga) => (
-                        <KnjigaKartica knjiga={knjiga}/>
+                        <div onClick={() => navigate("/knjige/" + knjiga.Id)}>
+                            <KnjigaKartica knjiga={knjiga} key = {knjiga.Isbn}/>
+                        </div>
                     ))}
                 </div>
             ):(

@@ -2,6 +2,7 @@ package kontroler
 
 import (
 	"bytes"
+	"fmt"
 	"net/http"
 
 	dto "api-gateway/dto"
@@ -22,12 +23,14 @@ func RutirajKnjigeServis(app *fiber.App) {
 		// print("Zahtev poslao: " + email + "\n")
 		response, err := http.Get(knjigeServisUrl)
 		if err != nil {
+			fmt.Println(err)
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}
 
-		var body []dto.KnjigaDTO
+		var body []dto.KnjigaSlikaDTO
 		err = util.GetJsonIC(response, &body)
 		if err != nil {
+			fmt.Println(err)
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}
 		return c.Status(response.StatusCode).JSON(body)
@@ -40,7 +43,7 @@ func RutirajKnjigeServis(app *fiber.App) {
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}
 
-		var body dto.KnjigaDTO
+		var body dto.KnjigaSlikaDTO
 		err = util.GetJsonIC(response, &body)
 		if err != nil {
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
@@ -55,7 +58,7 @@ func RutirajKnjigeServis(app *fiber.App) {
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}
 
-		var body dto.KnjigaDTO
+		var body dto.KnjigaSlikaDTO
 		err = util.GetJsonIC(response, &body)
 		if err != nil {
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)

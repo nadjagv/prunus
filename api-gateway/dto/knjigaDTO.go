@@ -32,5 +32,20 @@ type KnjigaDTO struct {
 	UkupnaKolicina   uint     `gorm:"not null;"`
 	TrenutnoDostupno uint     `gorm:"not null;"`
 	ProsecnaOcena    float64  `gorm:"not null;"`
+}
+
+type KnjigaSlikaDTO struct {
+	Id               uint
+	Isbn             string
+	Naziv            string
+	ImeAutora        string
+	PrezimeAutora    string
+	Opis             string
+	Zanr             ZanrEnum
+	BrojStrana       uint
+	GodinaNastanka   uint
+	UkupnaKolicina   uint
+	TrenutnoDostupno uint
+	ProsecnaOcena    float64
 	Slika            string
 }

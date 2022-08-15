@@ -15,7 +15,7 @@ const Header = () => {
   
     return (
       <Box className = "navBar">
-        <div width="70%" centered>
+        <div width="70%">
             <Tabs value={value} onChange={handleChange} centered textColor="secondary"
     indicatorColor="secondary" >
             <Tab label="Sve knjige" onClick={() => navigate("/knjige")}/>

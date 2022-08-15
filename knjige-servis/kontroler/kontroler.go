@@ -15,7 +15,11 @@ func OtkrijEndpointe() {
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		knjige := servis.PreuzmiSve()
-		return c.Status(fiber.StatusOK).JSON(knjige)
+		var rezultat []model.KnjigaSlikaDTO
+		for _, knjiga := range knjige {
+			rezultat = append(rezultat, knjiga.MapirajNaSlikaDTO())
+		}
+		return c.Status(fiber.StatusOK).JSON(rezultat)
 	})
 
 	app.Get("/:id", func(c *fiber.Ctx) error {
@@ -28,7 +32,7 @@ func OtkrijEndpointe() {
 		if err != nil {
 			return fiber.NewError(fiber.StatusNotFound, err.Error())
 		}
-		return c.Status(fiber.StatusOK).JSON(knjiga)
+		return c.Status(fiber.StatusOK).JSON(knjiga.MapirajNaSlikaDTO())
 	})
 
 	app.Get("/isbn/:isbn", func(c *fiber.Ctx) error {
@@ -37,7 +41,7 @@ func OtkrijEndpointe() {
 		if err != nil {
 			return fiber.NewError(fiber.StatusNotFound, err.Error())
 		}
-		return c.Status(fiber.StatusOK).JSON(knjiga)
+		return c.Status(fiber.StatusOK).JSON(knjiga.MapirajNaSlikaDTO())
 	})
 
 	app.Post("/", func(c *fiber.Ctx) error {
