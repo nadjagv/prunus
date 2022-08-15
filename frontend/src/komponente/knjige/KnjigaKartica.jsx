@@ -1,10 +1,11 @@
 import React from "react";
+import Zanr from "../../enumeracije/Zanr";
 
 const KnjigaKartica = ({knjiga}) =>{
     return (
         <div className="knjiga">
             <div>
-                <p>{knjiga.Zanr}</p>
+                <p>{Object.keys(Zanr).find(key => Zanr[key] === knjiga.Zanr)}</p>
             </div>
 
             <div>

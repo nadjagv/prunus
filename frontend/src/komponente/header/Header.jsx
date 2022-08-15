@@ -21,13 +21,13 @@ const Header = () => {
             <Tab label="Sve knjige" onClick={() => navigate("/knjige")}/>
             <Tab label="Item Two" />
             <Tab label="Item Three" />
+            <Tab label="Registracija" onClick={() => navigate("/registracija")}/>
+        
+            <Tab label="LogIn" onClick={() => navigate("/login")}/>
             </Tabs>
         </div>
 
         <div margin-top = "10px">
-            <Tab label="Registracija" onClick={() => navigate("/registracija")}/>
-        
-            <Tab label="LogIn" onClick={() => navigate("/login")}/>
         
             <IconButton onClick={() => navigate ("/nalog")}> <PersonOutlineIcon/></IconButton>
         </div>
