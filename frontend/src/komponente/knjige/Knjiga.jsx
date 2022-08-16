@@ -3,8 +3,7 @@ import { Box, Card, CardContent, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Zanr from "../../enumeracije/Zanr"
-
-const GATEWAY_URL = "http://localhost:8080/knjige"
+import Putanje from "../../konstante/Putanje";
 
 const Knjiga = () =>{
     const { id } = useParams()
@@ -18,7 +17,7 @@ const Knjiga = () =>{
 
     const preuzmiPoId = async () => {
         console.log(id)
-        const response = await fetch (`${GATEWAY_URL}/${id}`)
+        const response = await fetch (`${Putanje.knjigeGWURL}/${id}`)
         const data = await response.json();
         console.log(data)
         setKnjiga(data)

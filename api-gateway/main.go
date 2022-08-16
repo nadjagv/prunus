@@ -18,6 +18,7 @@ func main() {
 	}))
 
 	kontroler.RutirajKnjigeServis(app)
+	kontroler.RutirajKorisniciServis(app)
 
 	log.Fatal(app.Listen(":8080"))
 }

@@ -1,13 +1,39 @@
 import { Button, Card, CardContent, Grid, Paper, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AuthServis from "../../servisi/AuthServis";
+import axios from "axios";
+import Putanje from "../../konstante/Putanje";
 
 const LogIn = () => {
     const [email, setEmail] = useState("");
     const [lozinka, setLozinka] = useState("");
     const navigation = useNavigate();
 
-
+    useEffect(() => {
+        if (AuthServis.preuzmiKorisnika()) {
+        //   axios.post(environment.baseURL + "auth/logout").then((response) => {
+        //     AuthService.removeUser();
+        //   });
+        }
+      }, []);
+    
+      let kredencijali = {
+        Email: email,
+        Lozinka: lozinka,
+      };
+      const ulogujKorisnika = () => {
+        axios
+          .post(Putanje.korisniciGWURL + "/login", kredencijali)
+          .then((response) => {
+            console.log(response.data);
+            AuthServis.postaviKorisnika(response.data);
+            navigation("/");
+          })
+          .catch((error) => {
+            alert("Loši kredencijali.");
+          });
+      };
 
 
     return (
@@ -40,6 +66,7 @@ const LogIn = () => {
                     color="primary"
                     variant="contained"
                     onClick={() => {
+                        ulogujKorisnika()
                     }}
                     >
                     Log In

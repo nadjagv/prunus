@@ -7,6 +7,7 @@ import (
 	"time"
 
 	//model "korisnici-servis/model"
+	"korisnici-servis/model"
 	servis "korisnici-servis/servis"
 	util "korisnici-servis/util"
 
@@ -20,18 +21,20 @@ func OtkrijEndpointe() {
 	app := fiber.New()
 
 	app.Post("/login", func(c *fiber.Ctx) error {
-		var kredencijali = util.Kredencijali{
-			Email:   "gvozdenacn@gmail.com",
-			Lozinka: "lozinka1",
+
+		var payload util.Kredencijali
+		err := c.BodyParser(&payload)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
-		err := servis.ProveriKredencijale(kredencijali)
+		korisnik, err := servis.ProveriKredencijale(payload)
 		if err != nil {
 			return c.SendStatus(fiber.StatusUnauthorized)
 		}
 
 		rokIsteka := time.Now().Add(time.Minute * 5)
 		claims := &util.Claims{
-			Email: kredencijali.Email,
+			Email: korisnik.Email,
 			StandardClaims: jwt.StandardClaims{
 				ExpiresAt: rokIsteka.Unix(),
 			},
@@ -51,7 +54,13 @@ func OtkrijEndpointe() {
 		cookie.Expires = rokIsteka
 
 		c.Cookie(cookie)
-		return c.SendStatus(fiber.StatusOK)
+
+		korisnikTokenInfo := &model.KorisnikTokenInfo{
+			Email: korisnik.Email,
+			Tip:   korisnik.Tip,
+			Token: tokenStr,
+		}
+		return c.Status(fiber.StatusOK).JSON(korisnikTokenInfo)
 	})
 
 	app.Get("/", func(c *fiber.Ctx) error {

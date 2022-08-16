@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from "react";
 import KnjigaKartica from "./KnjigaKartica";
 import {useNavigate} from "react-router-dom"
-
-const GATEWAY_URL = "http://localhost:8080/knjige"
+import Putanje from "../../konstante/Putanje";
 
 const KnjigePregled = () =>{
     const [knjige, setKnjige] = useState([])
@@ -15,7 +14,7 @@ const KnjigePregled = () =>{
     }, [])
 
     const preuzmiSve = async () => {
-        const response = await fetch (`${GATEWAY_URL}`)
+        const response = await fetch (`${Putanje.knjigeGWURL}`)
         const data = await response.json();
         console.log(data)
         setKnjige(data)
