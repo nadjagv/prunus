@@ -90,6 +90,62 @@ func OtkrijEndpointe() {
 		return c.Status(fiber.StatusOK).JSON(korisnik)
 	})
 
+	app.Post("/", func(c *fiber.Ctx) error {
+		var payload model.KorisnikDTO
+		err := c.BodyParser(&payload)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+
+		err = servis.Kreiraj(payload)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+		return c.SendStatus(fiber.StatusOK)
+	})
+
+	app.Put("/", func(c *fiber.Ctx) error {
+		var payload model.KorisnikDTO
+		err := c.BodyParser(&payload)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+
+		err = servis.Izmeni(payload)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+		return c.SendStatus(fiber.StatusOK)
+	})
+
+	app.Put("/lozinka", func(c *fiber.Ctx) error {
+		var payload model.IzmenaLozinkeDTO
+		err := c.BodyParser(&payload)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+
+		err = servis.IzmeniLozinku(payload)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+		return c.SendStatus(fiber.StatusOK)
+	})
+
+	app.Delete("/:id", func(c *fiber.Ctx) error {
+		idStr := c.Params("id")
+		id, err := strconv.ParseUint(idStr, 10, 64)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+
+		err = servis.ObrisiPoId(uint(id))
+		if err != nil {
+			return fiber.NewError(fiber.StatusNotFound, err.Error())
+		}
+		return c.SendStatus(fiber.StatusOK)
+	})
+
 	log.Fatal(app.Listen(":8082"))
 
 }

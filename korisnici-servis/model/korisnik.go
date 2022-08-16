@@ -23,6 +23,7 @@ type Korisnik struct {
 	Tip            TipKorisnika `gorm:"not null;"`
 	IstekClanarine time.Time
 	Sumnjiv        bool `gorm:"not null;default:false"`
+	Blokiran       bool `gorm:"not null;default:false"`
 }
 
 type Tabler interface {

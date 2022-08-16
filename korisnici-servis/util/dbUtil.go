@@ -22,6 +22,7 @@ var korisnici = []model.Korisnik{
 		Tip:            model.TipKorisnika(2),
 		IstekClanarine: time.Time{},
 		Sumnjiv:        false,
+		Blokiran:       false,
 	},
 }
 
