@@ -1,6 +1,7 @@
 package kontroler
 
 import (
+	"fmt"
 	"log"
 	"strconv"
 
@@ -59,6 +60,7 @@ func OtkrijEndpointe() {
 	})
 
 	app.Put("/", func(c *fiber.Ctx) error {
+		fmt.Println("edit")
 		var payload model.KnjigaDTO
 		err := c.BodyParser(&payload)
 		if err != nil {
@@ -80,6 +82,48 @@ func OtkrijEndpointe() {
 		}
 
 		err = servis.ObrisiPoId(uint(id))
+		if err != nil {
+			return fiber.NewError(fiber.StatusNotFound, err.Error())
+		}
+		return c.SendStatus(fiber.StatusOK)
+	})
+
+	app.Get("/kolicina/:id", func(c *fiber.Ctx) error {
+		idStr := c.Params("id")
+		id, err := strconv.ParseUint(idStr, 10, 64)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+		dostupno, err := servis.ProveriDostupnuKolicinu(uint(id))
+		if err != nil {
+			return fiber.NewError(fiber.StatusNotFound, err.Error())
+		}
+		return c.Status(fiber.StatusOK).JSON(dostupno)
+	})
+
+	app.Put("/smanji-kolicinu/:id", func(c *fiber.Ctx) error {
+		fmt.Println("smanji")
+		idStr := c.Params("id")
+		id, err := strconv.ParseUint(idStr, 10, 64)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+
+		err = servis.SmanjiDostupnuKolicinu(uint(id))
+		if err != nil {
+			return fiber.NewError(fiber.StatusNotFound, err.Error())
+		}
+		return c.SendStatus(fiber.StatusOK)
+	})
+
+	app.Put("/povecaj-kolicinu/:id", func(c *fiber.Ctx) error {
+		idStr := c.Params("id")
+		id, err := strconv.ParseUint(idStr, 10, 64)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+
+		err = servis.PovecajDostupnuKolicinu(uint(id))
 		if err != nil {
 			return fiber.NewError(fiber.StatusNotFound, err.Error())
 		}

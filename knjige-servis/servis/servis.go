@@ -2,6 +2,7 @@ package servis
 
 import (
 	"errors"
+	"fmt"
 	model "knjige-servis/model"
 	repozitorijum "knjige-servis/repozitorijum"
 	"strconv"
@@ -69,4 +70,48 @@ func Izmeni(dto model.KnjigaDTO) error {
 
 func ObrisiPoId(id uint) error {
 	return repozitorijum.ObrisiPoId(id)
+}
+
+func ProveriDostupnuKolicinu(id uint) (uint, error) {
+	knjiga, err := repozitorijum.PreuzmiPoId(id)
+	if err != nil {
+		return 0, err
+	}
+
+	return knjiga.TrenutnoDostupno, err
+}
+
+func SmanjiDostupnuKolicinu(id uint) error {
+	knjiga, err := repozitorijum.PreuzmiPoId(id)
+	if err != nil {
+		return err
+	}
+
+	if knjiga.TrenutnoDostupno < 1 {
+		return errors.New("Knjiga trenutno nije dostupna.")
+	}
+	fmt.Print("Pre ")
+	fmt.Println(knjiga.TrenutnoDostupno)
+	knjiga.TrenutnoDostupno -= 1
+	fmt.Print("Posle ")
+	fmt.Println(knjiga.TrenutnoDostupno)
+	err = repozitorijum.Izmeni(knjiga)
+
+	return err
+}
+
+func PovecajDostupnuKolicinu(id uint) error {
+	knjiga, err := repozitorijum.PreuzmiPoId(id)
+	if err != nil {
+		return err
+	}
+
+	if knjiga.TrenutnoDostupno+1 > knjiga.UkupnaKolicina {
+		return errors.New("Greška - svi primerci knjige su već u biblioteci.")
+	}
+
+	knjiga.TrenutnoDostupno += 1
+	err = repozitorijum.Izmeni(knjiga)
+
+	return err
 }
