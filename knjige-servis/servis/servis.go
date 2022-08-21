@@ -22,9 +22,9 @@ func PreuzmiPoIsbn(isbn string) (model.Knjiga, error) {
 
 func Kreiraj(dto model.KnjigaDTO) error {
 	if dto.Isbn == "" || dto.Naziv == "" || dto.ImeAutora == "" || dto.PrezimeAutora == "" || dto.Opis == "" || dto.BrojStrana == 0 || dto.GodinaNastanka == 0 || dto.UkupnaKolicina == 0 {
-		return errors.New("Nedostaju podaci.")
+		return errors.New("nedostaju podaci")
 	} else if dto.BrojStrana <= 0 || dto.UkupnaKolicina <= 0 {
-		return errors.New("Broj strana i ukupna količina knjige u biblioteci moraju biti pozitivni brojevi.")
+		return errors.New("broj strana i ukupna količina knjige u biblioteci moraju biti pozitivni brojevi")
 	}
 
 	dto.Slika = "default.jpg"
@@ -40,11 +40,11 @@ func Izmeni(dto model.KnjigaDTO) error {
 		return err
 	}
 	if dto.GodinaNastanka == 0 {
-		return errors.New("Nije unesena validna godina.")
+		return errors.New("nije unesena validna godina")
 	}
 
 	if dto.BrojStrana <= 0 || dto.UkupnaKolicina <= 0 {
-		return errors.New("Broj strana i ukupna količina knjige u biblioteci moraju biti pozitivni brojevi.")
+		return errors.New("broj strana i ukupna količina knjige u biblioteci moraju biti pozitivni brojevi")
 	}
 
 	zaIzmenu.Isbn = dto.Isbn
@@ -88,13 +88,9 @@ func SmanjiDostupnuKolicinu(id uint) error {
 	}
 
 	if knjiga.TrenutnoDostupno < 1 {
-		return errors.New("Knjiga trenutno nije dostupna.")
+		return errors.New("knjiga trenutno nije dostupna")
 	}
-	fmt.Print("Pre ")
-	fmt.Println(knjiga.TrenutnoDostupno)
 	knjiga.TrenutnoDostupno -= 1
-	fmt.Print("Posle ")
-	fmt.Println(knjiga.TrenutnoDostupno)
 	err = repozitorijum.Izmeni(knjiga)
 
 	return err
@@ -107,10 +103,20 @@ func PovecajDostupnuKolicinu(id uint) error {
 	}
 
 	if knjiga.TrenutnoDostupno+1 > knjiga.UkupnaKolicina {
-		return errors.New("Greška - svi primerci knjige su već u biblioteci.")
+		return errors.New("greška - svi primerci knjige su već u biblioteci")
 	}
 
 	knjiga.TrenutnoDostupno += 1
+
+	if knjiga.TrenutnoDostupno == 1 {
+		pretplate := PreuzmiPoKnjizi(id)
+		for _, p := range pretplate {
+			//TODO slanje mejla pretplacenim
+
+			fmt.Println(p.KorisnikEmail)
+			continue
+		}
+	}
 	err = repozitorijum.Izmeni(knjiga)
 
 	return err

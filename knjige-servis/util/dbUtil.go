@@ -39,8 +39,10 @@ func KonektujPopuniDB() {
 	}
 
 	Database.Migrator().DropTable("knjige")
+	Database.Migrator().DropTable("pretplate")
 
 	Database.AutoMigrate(&model.Knjiga{})
+	Database.AutoMigrate(&model.Pretplata{})
 
 	for _, knjiga := range knjige {
 		Database.Create(&knjiga)

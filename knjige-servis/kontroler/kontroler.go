@@ -130,6 +130,47 @@ func OtkrijEndpointe() {
 		return c.SendStatus(fiber.StatusOK)
 	})
 
+	//pretplata
+	app.Get("/pretplata/:korisnikId", func(c *fiber.Ctx) error {
+		idStr := c.Params("korisnikId")
+		id, err := strconv.ParseUint(idStr, 10, 64)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+
+		pretplate := servis.PreuzmiPoKorisniku(uint(id))
+
+		return c.Status(fiber.StatusOK).JSON(pretplate)
+	})
+
+	app.Post("/pretplata", func(c *fiber.Ctx) error {
+		var payload model.Pretplata
+		err := c.BodyParser(&payload)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+
+		err = servis.KreirajPretplatu(payload)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+		return c.SendStatus(fiber.StatusOK)
+	})
+
+	app.Delete("/pretplata/:id", func(c *fiber.Ctx) error {
+		idStr := c.Params("id")
+		id, err := strconv.ParseUint(idStr, 10, 64)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+
+		err = servis.ObrisiPoIdPretplatu(uint(id))
+		if err != nil {
+			return fiber.NewError(fiber.StatusNotFound, err.Error())
+		}
+		return c.SendStatus(fiber.StatusOK)
+	})
+
 	log.Fatal(app.Listen(":8081"))
 
 }
