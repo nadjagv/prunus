@@ -16,6 +16,7 @@ type Iznajmljivanje struct {
 	KorisnikId               uint `gorm:"not null;"`
 	KnjigaId                 uint `gorm:"not null;"`
 	Produzeno                bool `gorm:"not null;"`
+	Aktivno                  bool `gorm:"not null;"`
 }
 
 type Tabler interface {

@@ -12,6 +12,8 @@ import (
 func OtkrijEndpointeRez(app *fiber.App) {
 	prefiks := "/rezervacije"
 
+	servis.ProveravajIstekRezervacija()
+
 	app.Get(prefiks+"/", func(c *fiber.Ctx) error {
 		rez := servis.PreuzmiSveRez()
 		var rezultat []model.RezervacijaDTO
@@ -56,6 +58,20 @@ func OtkrijEndpointeRez(app *fiber.App) {
 		}
 
 		err = servis.ObrisiPoIdRez(uint(id))
+		if err != nil {
+			return fiber.NewError(fiber.StatusNotFound, err.Error())
+		}
+		return c.SendStatus(fiber.StatusOK)
+	})
+
+	app.Put(prefiks+"/otkazi/:id", func(c *fiber.Ctx) error {
+		idStr := c.Params("id")
+		id, err := strconv.ParseUint(idStr, 10, 64)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+
+		err = servis.OtkaziRezervaciju(uint(id))
 		if err != nil {
 			return fiber.NewError(fiber.StatusNotFound, err.Error())
 		}

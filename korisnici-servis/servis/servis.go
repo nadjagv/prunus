@@ -121,3 +121,14 @@ func IzmeniLozinku(dto model.IzmenaLozinkeDTO) error {
 func ObrisiPoId(id uint) error {
 	return repozitorijum.ObrisiPoId(id)
 }
+
+func OznaciSumnjiv(id uint) error {
+	zaIzmenu, err := repozitorijum.PreuzmiPoId(id)
+	if err != nil {
+		return err
+	}
+	zaIzmenu.Sumnjiv = true
+
+	err = repozitorijum.Izmeni(zaIzmenu)
+	return err
+}

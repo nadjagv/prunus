@@ -25,6 +25,30 @@ func PreuzmiPoIdRez(id uint) (model.Rezervacija, error) {
 	return rezervacija, nil
 }
 
+func PreuzmiAktivneRez() []model.Rezervacija {
+	var rezervacije []model.Rezervacija
+
+	util.Database.Where("aktivno = ?", true).Find(&rezervacije)
+
+	return rezervacije
+}
+
+func PreuzmiSveKorisnikRez(id uint) []model.Rezervacija {
+	var rezervacije []model.Rezervacija
+
+	util.Database.Where("korisnik_id = ?", id).Find(&rezervacije)
+
+	return rezervacije
+}
+
+func PreuzmiAktivneKorisnikRez(id uint) []model.Rezervacija {
+	var rezervacije []model.Rezervacija
+
+	util.Database.Where("korisnik_id = ? AND aktivno = ?", id, true).Find(&rezervacije)
+
+	return rezervacije
+}
+
 func KreirajRez(rezervacija model.Rezervacija) error {
 	result := util.Database.Create(&rezervacija)
 

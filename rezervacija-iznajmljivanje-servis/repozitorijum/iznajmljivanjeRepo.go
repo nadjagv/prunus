@@ -5,6 +5,7 @@ import (
 	model "rezervacija-iznajmljivanje-servis/model"
 	util "rezervacija-iznajmljivanje-servis/util"
 	"strconv"
+	"time"
 )
 
 func PreuzmiSveIzn() []model.Iznajmljivanje {
@@ -23,6 +24,46 @@ func PreuzmiPoIdIzn(id uint) (model.Iznajmljivanje, error) {
 	}
 
 	return iznajmljivanje, nil
+}
+
+func PreuzmiAktivnaIzn() []model.Iznajmljivanje {
+	var iznajmljivanja []model.Iznajmljivanje
+
+	util.Database.Where("aktivno = ?", true).Find(&iznajmljivanja)
+
+	return iznajmljivanja
+}
+
+func PreuzmiSveKorisnikIzn(id uint) []model.Iznajmljivanje {
+	var iznajmljivanja []model.Iznajmljivanje
+
+	util.Database.Where("korisnik_id = ?", id).Find(&iznajmljivanja)
+
+	return iznajmljivanja
+}
+
+func PreuzmiAktivnaKorisnikIzn(id uint) []model.Iznajmljivanje {
+	var iznajmljivanja []model.Iznajmljivanje
+
+	util.Database.Where("korisnik_id = ? AND aktivno = ?", id, true).Find(&iznajmljivanja)
+
+	return iznajmljivanja
+}
+
+func PreuzmiIzmedjuDatumaZaKorisnikaIzn(korisnikId uint, d1 time.Time, d2 time.Time) []model.Iznajmljivanje {
+	var iznajmljivanja []model.Iznajmljivanje
+
+	util.Database.Where("korisnik_id = ? AND datum_vreme_iznajmljivanja BETWEEN ? AND ?", korisnikId, d1, d2).Find(&iznajmljivanja)
+
+	return iznajmljivanja
+}
+
+func PreuzmiZakasneleIzmedjuDatumaZaKorisnikaIzn(korisnikId uint, d1 time.Time, d2 time.Time) []model.Iznajmljivanje {
+	var iznajmljivanja []model.Iznajmljivanje
+
+	util.Database.Where("korisnik_id = ? AND zakasnelo_vracanje=? AND datum_vreme_iznajmljivanja BETWEEN ? AND ?", korisnikId, true, d1, d2).Find(&iznajmljivanja)
+
+	return iznajmljivanja
 }
 
 func KreirajIzn(iznajmljivanje model.Iznajmljivanje) error {

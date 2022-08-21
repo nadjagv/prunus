@@ -7,6 +7,7 @@ type RezervacijaDTO struct {
 	DatumVremeIsteka time.Time
 	KorisnikId       uint
 	KnjigaId         uint
+	Aktivno          bool
 }
 
 func (rezervacija *Rezervacija) MapirajNaDTO() RezervacijaDTO {
@@ -15,6 +16,7 @@ func (rezervacija *Rezervacija) MapirajNaDTO() RezervacijaDTO {
 		DatumVremeIsteka: rezervacija.DatumVremeIsteka,
 		KorisnikId:       rezervacija.KorisnikId,
 		KnjigaId:         rezervacija.KnjigaId,
+		Aktivno:          rezervacija.Aktivno,
 	}
 }
 
@@ -23,5 +25,6 @@ func (rezervacija *RezervacijaDTO) MapirajNaObjekat() Rezervacija {
 		DatumVremeIsteka: rezervacija.DatumVremeIsteka,
 		KorisnikId:       rezervacija.KorisnikId,
 		KnjigaId:         rezervacija.KnjigaId,
+		Aktivno:          rezervacija.Aktivno,
 	}
 }

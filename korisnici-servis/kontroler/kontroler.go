@@ -132,6 +132,20 @@ func OtkrijEndpointe() {
 		return c.SendStatus(fiber.StatusOK)
 	})
 
+	app.Put("/sumnjiv/:id", func(c *fiber.Ctx) error {
+		idStr := c.Params("id")
+		id, err := strconv.ParseUint(idStr, 10, 64)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+
+		err = servis.OznaciSumnjiv(uint(id))
+		if err != nil {
+			return fiber.NewError(fiber.StatusNotFound, err.Error())
+		}
+		return c.SendStatus(fiber.StatusOK)
+	})
+
 	app.Delete("/:id", func(c *fiber.Ctx) error {
 		idStr := c.Params("id")
 		id, err := strconv.ParseUint(idStr, 10, 64)

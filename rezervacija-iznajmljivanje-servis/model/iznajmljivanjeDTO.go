@@ -11,6 +11,7 @@ type IznajmljivanjeDTO struct {
 	KorisnikId               uint
 	KnjigaId                 uint
 	Produzeno                bool
+	Aktivno                  bool
 }
 
 func (iznajmljivanje *Iznajmljivanje) MapirajNaDTO() IznajmljivanjeDTO {
@@ -23,6 +24,7 @@ func (iznajmljivanje *Iznajmljivanje) MapirajNaDTO() IznajmljivanjeDTO {
 		KorisnikId:               iznajmljivanje.KorisnikId,
 		KnjigaId:                 iznajmljivanje.KnjigaId,
 		Produzeno:                iznajmljivanje.Produzeno,
+		Aktivno:                  iznajmljivanje.Aktivno,
 	}
 }
 
@@ -35,5 +37,6 @@ func (iznajmljivanje *IznajmljivanjeDTO) MapirajNaObjekat() Iznajmljivanje {
 		KorisnikId:               iznajmljivanje.KorisnikId,
 		KnjigaId:                 iznajmljivanje.KnjigaId,
 		Produzeno:                iznajmljivanje.Produzeno,
+		Aktivno:                  iznajmljivanje.Aktivno,
 	}
 }
