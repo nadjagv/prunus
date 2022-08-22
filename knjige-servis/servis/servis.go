@@ -1,10 +1,13 @@
 package servis
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	model "knjige-servis/model"
 	repozitorijum "knjige-servis/repozitorijum"
+	"net/http"
 	"strconv"
 )
 
@@ -111,8 +114,24 @@ func PovecajDostupnuKolicinu(id uint) error {
 
 	if knjiga.TrenutnoDostupno == 1 {
 		pretplate := PreuzmiPoKnjizi(id)
+
+		poruka := "Obaveštavamo Vas da je knjiga " + knjiga.Naziv + " ponovo dostupna."
+		mejl := model.Mejl{
+			Poruka:     poruka,
+			MejlAdresa: "",
+		}
 		for _, p := range pretplate {
-			//TODO slanje mejla pretplacenim
+			//slanje mejla pretplacenim
+			mejl.MejlAdresa = p.KorisnikEmail
+
+			jsonMejl, err := json.Marshal(mejl)
+			if err != nil {
+				return err
+			}
+			_, err = http.Post("http://localhost:8084/pretplata", "application/json", bytes.NewReader([]byte(jsonMejl)))
+			if err != nil {
+				return err
+			}
 
 			fmt.Println(p.KorisnikEmail)
 			continue

@@ -1,11 +1,14 @@
 package servis
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	model "korisnici-servis/model"
 	repozitorijum "korisnici-servis/repozitorijum"
 	util "korisnici-servis/util"
+	"net/http"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -129,7 +132,23 @@ func OznaciSumnjiv(id uint) error {
 	}
 	zaIzmenu.Sumnjiv = true
 
+	poruka := "Opomena: primetili smo da ste zakasnili sa vraćanjem knjige 3 puta u proteklih 6 meseci. Molimo Vas da vraćate knjige na vreme."
+	mejl := model.Mejl{
+		Poruka:     poruka,
+		MejlAdresa: zaIzmenu.Email,
+	}
+
+	jsonMejl, err := json.Marshal(mejl)
+	if err != nil {
+		return err
+	}
+	_, err = http.Post("http://localhost:8084/opomena", "application/json", bytes.NewReader([]byte(jsonMejl)))
+	if err != nil {
+		return err
+	}
+
 	err = repozitorijum.Izmeni(zaIzmenu)
+
 	return err
 }
 
@@ -149,15 +168,29 @@ func ProduziClanarinu(id uint) error {
 	return err
 }
 
-func Blokiraj(id uint) error {
+func Blokiraj(id uint, obrazlozenje string) error {
 	zaIzmenu, err := repozitorijum.PreuzmiPoId(id)
 	if err != nil {
 		return err
 	}
 
 	zaIzmenu.Blokiran = true
-	//TODO slanje mejla
 
 	err = repozitorijum.Izmeni(zaIzmenu)
+
+	poruka := "Nalog blokiran. Obrazloženje: \n" + obrazlozenje
+	mejl := model.Mejl{
+		Poruka:     poruka,
+		MejlAdresa: zaIzmenu.Email,
+	}
+
+	jsonMejl, err := json.Marshal(mejl)
+	if err != nil {
+		return err
+	}
+	_, err = http.Post("http://localhost:8084/blokiranje", "application/json", bytes.NewReader([]byte(jsonMejl)))
+	if err != nil {
+		return err
+	}
 	return err
 }

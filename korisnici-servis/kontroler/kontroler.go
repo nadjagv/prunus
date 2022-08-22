@@ -181,7 +181,13 @@ func OtkrijEndpointe() {
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 
-		err = servis.Blokiraj(uint(id))
+		var payload string
+		err = c.BodyParser(&payload)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+
+		err = servis.Blokiraj(uint(id), payload)
 		if err != nil {
 			return fiber.NewError(fiber.StatusNotFound, err.Error())
 		}

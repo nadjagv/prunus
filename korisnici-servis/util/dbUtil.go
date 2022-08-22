@@ -24,6 +24,15 @@ var korisnici = []model.Korisnik{
 		Sumnjiv:        false,
 		Blokiran:       false,
 	},
+	{Email: "nadjaimatijaprojekat@gmail.com",
+		Lozinka:        string(hashLozinka1),
+		Ime:            "Pera",
+		Prezime:        "Peric",
+		Tip:            model.TipKorisnika(0),
+		IstekClanarine: time.Time{},
+		Sumnjiv:        false,
+		Blokiran:       false,
+	},
 }
 
 var Database *gorm.DB

@@ -15,6 +15,7 @@ func OtkrijEndpointe() {
 	app := fiber.New()
 
 	app.Get("/", func(c *fiber.Ctx) error {
+		println("alfhlsf")
 		knjige := servis.PreuzmiSve()
 		var rezultat []model.KnjigaSlikaDTO
 		for _, knjiga := range knjige {
@@ -134,14 +135,12 @@ func OtkrijEndpointe() {
 		idStr := c.Params("id")
 		id, err := strconv.ParseUint(idStr, 10, 64)
 		if err != nil {
-			println("affsfs")
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 
 		ocenaStr := c.Params("ocena")
 		ocena, err2 := strconv.ParseUint(ocenaStr, 10, 64)
 		if err2 != nil {
-			println("ocena")
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 
@@ -149,7 +148,6 @@ func OtkrijEndpointe() {
 
 		err = servis.Oceni(uint(id), uint(ocena))
 		if err != nil {
-			println("test")
 			return fiber.NewError(fiber.StatusNotFound, err.Error())
 		}
 		return c.SendStatus(fiber.StatusOK)

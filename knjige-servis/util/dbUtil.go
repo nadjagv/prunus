@@ -20,7 +20,7 @@ var knjige = []model.Knjiga{
 		BrojStrana:       367,
 		GodinaNastanka:   1813,
 		UkupnaKolicina:   10,
-		TrenutnoDostupno: 10,
+		TrenutnoDostupno: 0,
 		ProsecnaOcena:    5.0,
 		BrojOcena:        1,
 		Slika:            "9788677106294.jpg"},

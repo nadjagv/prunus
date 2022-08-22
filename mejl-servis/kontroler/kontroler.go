@@ -16,9 +16,9 @@ func OtkrijEndpointe() {
 		var payload dto.Mejl
 		err := c.BodyParser(&payload)
 		if err != nil {
+			println(err.Error())
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
-
 		err = servis.PosaljiMejl("Dostupna knjiga", payload.Poruka, payload.MejlAdresa)
 		if err != nil {
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
