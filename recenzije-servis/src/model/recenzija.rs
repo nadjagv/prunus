@@ -13,7 +13,18 @@ pub struct Recenzija {
 
 #[derive(Serialize, Clone, Deserialize)]
 pub enum StatusRecenzije{
-    Kreirano=0,
-    Odobreno=1,
-    Odbijeno=2
+    KREIRANO=0,
+    ODOBRENO=1,
+    ODBIJENO=2
+}
+
+impl StatusRecenzije {
+    pub fn from_i32(status: i32) -> StatusRecenzije {
+        match status {
+            0 => StatusRecenzije::KREIRANO,
+            1 => StatusRecenzije::ODOBRENO,
+            2 => StatusRecenzije::ODBIJENO,
+            _ => panic!("Nepoznata vrednost: {}", status),
+        }
+    }
 }
