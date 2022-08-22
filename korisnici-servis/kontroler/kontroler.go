@@ -160,6 +160,34 @@ func OtkrijEndpointe() {
 		return c.SendStatus(fiber.StatusOK)
 	})
 
+	app.Put("/produzi-clanarinu/:id", func(c *fiber.Ctx) error {
+		idStr := c.Params("id")
+		id, err := strconv.ParseUint(idStr, 10, 64)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+
+		err = servis.ProduziClanarinu(uint(id))
+		if err != nil {
+			return fiber.NewError(fiber.StatusNotFound, err.Error())
+		}
+		return c.SendStatus(fiber.StatusOK)
+	})
+
+	app.Put("/blokiraj/:id", func(c *fiber.Ctx) error {
+		idStr := c.Params("id")
+		id, err := strconv.ParseUint(idStr, 10, 64)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+
+		err = servis.Blokiraj(uint(id))
+		if err != nil {
+			return fiber.NewError(fiber.StatusNotFound, err.Error())
+		}
+		return c.SendStatus(fiber.StatusOK)
+	})
+
 	log.Fatal(app.Listen(":8082"))
 
 }

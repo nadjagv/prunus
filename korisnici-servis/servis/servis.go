@@ -132,3 +132,32 @@ func OznaciSumnjiv(id uint) error {
 	err = repozitorijum.Izmeni(zaIzmenu)
 	return err
 }
+
+func ProduziClanarinu(id uint) error {
+	zaIzmenu, err := repozitorijum.PreuzmiPoId(id)
+	if err != nil {
+		return err
+	}
+
+	if zaIzmenu.IstekClanarine.Before(time.Now()) {
+		zaIzmenu.IstekClanarine = time.Now().AddDate(1, 0, 0)
+	} else {
+		zaIzmenu.IstekClanarine = zaIzmenu.IstekClanarine.AddDate(1, 0, 0)
+	}
+
+	err = repozitorijum.Izmeni(zaIzmenu)
+	return err
+}
+
+func Blokiraj(id uint) error {
+	zaIzmenu, err := repozitorijum.PreuzmiPoId(id)
+	if err != nil {
+		return err
+	}
+
+	zaIzmenu.Blokiran = true
+	//TODO slanje mejla
+
+	err = repozitorijum.Izmeni(zaIzmenu)
+	return err
+}
