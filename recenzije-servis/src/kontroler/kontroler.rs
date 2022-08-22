@@ -1,6 +1,8 @@
-use rocket::{response::content, request::{FromRequest, self}, Request, Outcome, http::{Status, RawStr}};
+use rocket::{response::content, request::{FromRequest, self}, Outcome, http::{Status, RawStr}};
 use rocket_contrib::json::Json;
 use serde_json::json;
+use reqwest::Client;
+use std::error::Error;
 
 use crate::{servis::servis, model::recenzija::{self, Recenzija}};
 
@@ -48,6 +50,36 @@ pub fn obrisi(id: i32) -> content::Json<String>{
     let mut s = servis::RecenzijaServis::new();
 
     s.obrisi(id);
+
+
+    return content::Json(String::from("Uspeh"));
+
+}
+
+#[put("/odobri/<id>")]
+pub fn odobri(id: i32)-> Result<(), Box<dyn Error>>{
+    let mut s = servis::RecenzijaServis::new();
+
+    s.promeni_status(id, 1);
+
+    let recenzija = s.preuzmi_po_id(id).expect("nije pronadjeno");
+
+
+    let url = "http://localhost:8081/oceni/".to_string() + &recenzija.knjiga_id.to_string() + "/" + &recenzija.ocena.to_string();
+
+    let client = reqwest::blocking::Client::new();
+    let resp = client.put(url).send()?;
+    println!("{:#?}", resp);
+
+    Ok(())
+
+}
+
+#[put("/odbij/<id>")]
+pub fn odbij(id: i32) -> content::Json<String>{
+    let mut s = servis::RecenzijaServis::new();
+
+    s.promeni_status(id, 2);
 
     return content::Json(String::from("Uspeh"));
 

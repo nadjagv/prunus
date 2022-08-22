@@ -29,6 +29,7 @@ func Kreiraj(dto model.KnjigaDTO) error {
 
 	dto.Slika = "default.jpg"
 	dto.TrenutnoDostupno = dto.UkupnaKolicina
+	dto.BrojOcena = 0
 	err := repozitorijum.Kreiraj(dto.MapirajNaObjekat())
 
 	return err
@@ -117,6 +118,20 @@ func PovecajDostupnuKolicinu(id uint) error {
 			continue
 		}
 	}
+	err = repozitorijum.Izmeni(knjiga)
+
+	return err
+}
+
+func Oceni(id uint, ocena uint) error {
+	knjiga, err := repozitorijum.PreuzmiPoId(id)
+	if err != nil {
+		return err
+	}
+
+	knjiga.ProsecnaOcena = (knjiga.ProsecnaOcena*float64(knjiga.BrojOcena) + float64(ocena)) / float64((knjiga.BrojOcena + 1))
+
+	knjiga.BrojOcena += 1
 	err = repozitorijum.Izmeni(knjiga)
 
 	return err

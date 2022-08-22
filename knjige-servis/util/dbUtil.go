@@ -22,6 +22,7 @@ var knjige = []model.Knjiga{
 		UkupnaKolicina:   10,
 		TrenutnoDostupno: 10,
 		ProsecnaOcena:    5.0,
+		BrojOcena:        1,
 		Slika:            "9788677106294.jpg"},
 }
 

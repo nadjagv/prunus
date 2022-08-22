@@ -130,6 +130,31 @@ func OtkrijEndpointe() {
 		return c.SendStatus(fiber.StatusOK)
 	})
 
+	app.Put("/oceni/:id/:ocena", func(c *fiber.Ctx) error {
+		idStr := c.Params("id")
+		id, err := strconv.ParseUint(idStr, 10, 64)
+		if err != nil {
+			println("affsfs")
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+
+		ocenaStr := c.Params("ocena")
+		ocena, err2 := strconv.ParseUint(ocenaStr, 10, 64)
+		if err2 != nil {
+			println("ocena")
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+
+		println(ocena)
+
+		err = servis.Oceni(uint(id), uint(ocena))
+		if err != nil {
+			println("test")
+			return fiber.NewError(fiber.StatusNotFound, err.Error())
+		}
+		return c.SendStatus(fiber.StatusOK)
+	})
+
 	//pretplata
 	app.Get("/pretplata/:korisnikId", func(c *fiber.Ctx) error {
 		idStr := c.Params("korisnikId")

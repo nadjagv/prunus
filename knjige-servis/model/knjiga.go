@@ -37,6 +37,7 @@ type Knjiga struct {
 	UkupnaKolicina   uint     `gorm:"not null;"`
 	TrenutnoDostupno uint     `gorm:"not null;"`
 	ProsecnaOcena    float64
+	BrojOcena        uint `gorm:"not null;"`
 	Slika            string
 }
 

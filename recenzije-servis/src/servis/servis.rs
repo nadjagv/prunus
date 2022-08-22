@@ -45,4 +45,8 @@ impl RecenzijaServis{
       pub fn obrisi(&mut self, id: i32) {
         self.repo.obrisi(id);
       }
+
+      pub fn promeni_status(&mut self, id: i32, status: i32) {
+        self.repo.promeni_status(id, status);
+      }
 }

@@ -30,7 +30,7 @@ impl Repozitorijum {
     
         for r in unwraped_redovi {
     
-          recenzije.push(Self::mapirajNaRecenziju(r))
+          recenzije.push(Self::mapiraj_na_recenziju(r))
         }
     
         Some(recenzije)
@@ -84,7 +84,7 @@ impl Repozitorijum {
     
         for r in unwraped_redovi {
     
-          recenzije.push(Self::mapirajNaRecenziju(r))
+          recenzije.push(Self::mapiraj_na_recenziju(r))
         }
     
         Some(recenzije)
@@ -130,7 +130,17 @@ impl Repozitorijum {
         }
       }
 
-      fn mapirajNaRecenziju(r :Row)->Recenzija{
+    pub fn promeni_status(&mut self, id: i32, status: i32) {
+        let res = self.client.execute(
+          "UPDATE recenzije SET status=$1 WHERE id = $2",
+          &[&status, &id],);
+
+          if res.is_err() {
+            eprintln!("{}", res.err().unwrap());
+        }
+      }
+
+      fn mapiraj_na_recenziju(r :Row)->Recenzija{
         let id: i32 = r.get(0);
         let komentar: String = r.get(1);
         let ocena: i32 = r.get(2);

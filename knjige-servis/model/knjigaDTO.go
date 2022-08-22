@@ -2,17 +2,18 @@ package model
 
 type KnjigaDTO struct {
 	Id               uint
-	Isbn             string   `gorm:"not null;"`
-	Naziv            string   `gorm:"not null;"`
-	ImeAutora        string   `gorm:"not null;"`
-	PrezimeAutora    string   `gorm:"not null;"`
-	Opis             string   `gorm:"not null;"`
-	Zanr             ZanrEnum `gorm:"not null;default:12"`
-	BrojStrana       uint     `gorm:"not null;"`
-	GodinaNastanka   uint     `gorm:"not null;"`
-	UkupnaKolicina   uint     `gorm:"not null;"`
-	TrenutnoDostupno uint     `gorm:"not null;"`
-	ProsecnaOcena    float64  `gorm:"not null;"`
+	Isbn             string
+	Naziv            string
+	ImeAutora        string
+	PrezimeAutora    string
+	Opis             string
+	Zanr             ZanrEnum
+	BrojStrana       uint
+	GodinaNastanka   uint
+	UkupnaKolicina   uint
+	TrenutnoDostupno uint
+	ProsecnaOcena    float64
+	BrojOcena        uint
 	Slika            string
 }
 
@@ -30,6 +31,7 @@ func (knjiga *Knjiga) MapirajNaDTO() KnjigaDTO {
 		UkupnaKolicina:   knjiga.UkupnaKolicina,
 		TrenutnoDostupno: knjiga.TrenutnoDostupno,
 		ProsecnaOcena:    knjiga.ProsecnaOcena,
+		BrojOcena:        knjiga.BrojOcena,
 		Slika:            knjiga.Slika,
 	}
 }
@@ -47,6 +49,7 @@ func (knjiga *KnjigaDTO) MapirajNaObjekat() Knjiga {
 		UkupnaKolicina:   knjiga.UkupnaKolicina,
 		TrenutnoDostupno: knjiga.TrenutnoDostupno,
 		ProsecnaOcena:    knjiga.ProsecnaOcena,
+		BrojOcena:        knjiga.BrojOcena,
 		Slika:            knjiga.Slika,
 	}
 }
