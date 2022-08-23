@@ -103,4 +103,85 @@ func RutirajKnjigeServis(app *fiber.App) {
 		return c.SendStatus(response.StatusCode)
 	})
 
+	app.Get(prefiks+"/kolicina/:id", func(c *fiber.Ctx) error {
+		id := c.Params("id")
+		response, err := http.Get(knjigeServisUrl + "kolicina/" + id)
+		if err != nil {
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+
+		var body uint
+		err = util.GetJsonIC(response, &body)
+		if err != nil {
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+		return c.Status(response.StatusCode).JSON(body)
+	})
+
+	app.Put(prefiks+"/smanji-kolicinu/:id", func(c *fiber.Ctx) error {
+		request, err := http.NewRequest(http.MethodPut, knjigeServisUrl+"/smanji-kolicinu/:id", bytes.NewBuffer(c.Body()))
+		if err != nil {
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+		request.Header.Set("Content-Type", "application/json; charset=utf-8")
+		client := &http.Client{}
+		response, err := client.Do(request)
+		if err != nil {
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+		return c.SendStatus(response.StatusCode)
+	})
+
+	app.Put(prefiks+"/povecaj-kolicinu/:id", func(c *fiber.Ctx) error {
+		request, err := http.NewRequest(http.MethodPut, knjigeServisUrl+"/povecaj-kolicinu/:id", bytes.NewBuffer(c.Body()))
+		if err != nil {
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+		request.Header.Set("Content-Type", "application/json; charset=utf-8")
+		client := &http.Client{}
+		response, err := client.Do(request)
+		if err != nil {
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+		return c.SendStatus(response.StatusCode)
+	})
+
+	app.Get(prefiks+"/pretplata/:id", func(c *fiber.Ctx) error {
+		id := c.Params("id")
+		response, err := http.Get(knjigeServisUrl + "pretplata/" + id)
+		if err != nil {
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+
+		var body []dto.PretplataDTO
+		err = util.GetJsonIC(response, &body)
+		if err != nil {
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+		return c.Status(response.StatusCode).JSON(body)
+	})
+
+	app.Post(prefiks+"/pretplata", func(c *fiber.Ctx) error {
+		response, err := http.Post(knjigeServisUrl+"pretplata/", "application/json", bytes.NewReader(c.Body()))
+		if err != nil {
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+		return c.SendStatus(response.StatusCode)
+	})
+
+	app.Delete(prefiks+"/pretplata/:id", func(c *fiber.Ctx) error {
+		idStr := c.Params("id")
+		request, err := http.NewRequest(http.MethodDelete, knjigeServisUrl+"pretplata/"+idStr, nil)
+		if err != nil {
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+		client := &http.Client{}
+		response, err := client.Do(request)
+		if err != nil {
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+
+		return c.SendStatus(response.StatusCode)
+	})
+
 }

@@ -162,18 +162,22 @@ func OtkrijEndpointe() {
 		}
 
 		pretplate := servis.PreuzmiPoKorisniku(uint(id))
+		var rezultat []model.PretplataDTO
+		for _, p := range pretplate {
+			rezultat = append(rezultat, p.MapirajNaDTO())
+		}
 
 		return c.Status(fiber.StatusOK).JSON(pretplate)
 	})
 
 	app.Post("/pretplata", func(c *fiber.Ctx) error {
-		var payload model.Pretplata
+		var payload model.PretplataDTO
 		err := c.BodyParser(&payload)
 		if err != nil {
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 
-		err = servis.KreirajPretplatu(payload)
+		err = servis.KreirajPretplatu(payload.MapirajNaObjekat())
 		if err != nil {
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
