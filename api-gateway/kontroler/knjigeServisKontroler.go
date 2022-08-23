@@ -119,7 +119,8 @@ func RutirajKnjigeServis(app *fiber.App) {
 	})
 
 	app.Put(prefiks+"/smanji-kolicinu/:id", func(c *fiber.Ctx) error {
-		request, err := http.NewRequest(http.MethodPut, knjigeServisUrl+"/smanji-kolicinu/:id", bytes.NewBuffer(c.Body()))
+		idStr := c.Params("id")
+		request, err := http.NewRequest(http.MethodPut, knjigeServisUrl+"smanji-kolicinu/"+idStr, bytes.NewBuffer(c.Body()))
 		if err != nil {
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}
@@ -133,7 +134,8 @@ func RutirajKnjigeServis(app *fiber.App) {
 	})
 
 	app.Put(prefiks+"/povecaj-kolicinu/:id", func(c *fiber.Ctx) error {
-		request, err := http.NewRequest(http.MethodPut, knjigeServisUrl+"/povecaj-kolicinu/:id", bytes.NewBuffer(c.Body()))
+		idStr := c.Params("id")
+		request, err := http.NewRequest(http.MethodPut, knjigeServisUrl+"povecaj-kolicinu/"+idStr, bytes.NewBuffer(c.Body()))
 		if err != nil {
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}

@@ -20,4 +20,5 @@ type KorisnikDTO struct {
 	Tip            TipKorisnika
 	IstekClanarine time.Time
 	Sumnjiv        bool
+	Blokiran       bool
 }
