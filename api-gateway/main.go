@@ -19,6 +19,7 @@ func main() {
 
 	kontroler.RutirajKnjigeServis(app)
 	kontroler.RutirajKorisniciServis(app)
+	kontroler.RutirajRezIznServis(app)
 
 	log.Fatal(app.Listen(":8080"))
 }
