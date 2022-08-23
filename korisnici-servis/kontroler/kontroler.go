@@ -35,6 +35,7 @@ func OtkrijEndpointe() {
 		rokIsteka := time.Now().Add(time.Minute * 5)
 		claims := &util.Claims{
 			Email: korisnik.Email,
+			Tip:   korisnik.Tip,
 			StandardClaims: jwt.StandardClaims{
 				ExpiresAt: rokIsteka.Unix(),
 			},

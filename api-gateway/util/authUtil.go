@@ -4,6 +4,8 @@ import (
 	"errors"
 
 	"github.com/golang-jwt/jwt"
+
+	dto "api-gateway/dto"
 )
 
 type Kredencijali struct {
@@ -13,12 +15,13 @@ type Kredencijali struct {
 
 type Claims struct {
 	Email string
+	Tip   dto.TipKorisnika
 	jwt.StandardClaims
 }
 
 var jwtKey = []byte("prunus_jwt_kljuc")
 
-func Autentifikuj(tokenStr string) (string, error) {
+func Autentifikuj(tokenStr string) (string, dto.TipKorisnika, error) {
 	claims := &Claims{}
 
 	token, err := jwt.ParseWithClaims(tokenStr, claims,
@@ -27,12 +30,12 @@ func Autentifikuj(tokenStr string) (string, error) {
 		})
 
 	if err != nil {
-		return "", errors.New("Unauthorized")
+		return "", 0, errors.New("Unauthorized")
 	}
 
 	if !token.Valid {
-		return "", errors.New("Unauthorized")
+		return "", 0, errors.New("Unauthorized")
 	}
 
-	return claims.Email, nil
+	return claims.Email, claims.Tip, nil
 }
