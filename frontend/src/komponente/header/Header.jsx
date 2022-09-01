@@ -1,11 +1,17 @@
 import { Tabs, Tab, IconButton, Button} from "@mui/material";
 import { Box } from "@mui/system";
-import {React, SyntheticEvent, useState} from "react";
+import {React, SyntheticEvent, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom"
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import AuthServis from "../../servisi/AuthServis";
 
 const Header = () => {
     const [value, setValue] = useState(0);
+    const [korisnik, setKorisnik] = useState(null)
+
+    useEffect(() => {
+      setKorisnik(AuthServis.preuzmiKorisnika())
+    }, [])
 
     const navigate = useNavigate()
 
@@ -15,22 +21,43 @@ const Header = () => {
   
     return (
       <Box className = "navBar">
+        { korisnik==null ?
         <div width="70%">
-            <Tabs value={value} onChange={handleChange} centered textColor="secondary"
-    indicatorColor="secondary" >
-            <Tab label="Sve knjige" onClick={() => navigate("/knjige")}/>
-            <Tab label="Item Two" />
-            <Tab label="Item Three" />
-            <Tab label="Registracija" onClick={() => navigate("/registracija")}/>
-        
-            <Tab label="LogIn" onClick={() => navigate("/login")}/>
+            <Tabs value={value} onChange={handleChange} centered textColor="secondary" indicatorColor="secondary" >
+              <Tab label="Sve knjige" onClick={() => navigate("/knjige")}/>
+              <Tab label="Registracija" onClick={() => navigate("/registracija")}/>
+              <Tab label="LogIn" onClick={() => navigate("/login")}/>
+              
+            </Tabs>
+        </div> :
+        <div width="70%">
+            <Tabs value={value} onChange={handleChange} centered textColor="secondary" indicatorColor="secondary" >
+              <Tab label="Sve knjige" onClick={() => navigate("/knjige")}/>
+              
+              { korisnik.Tip==0 && <Tab label="Rezervacija"/>}
+              { korisnik.Tip==0 && <Tab label="Iznajmljivanje"/>}
+              { korisnik.Tip==0 && <Tab label="Recenzije"/>}
+              { korisnik.Tip==0 && <Tab label="Pretplate"/>}
+              { korisnik.Tip==0 && <Tab label="Preporuka"/>}
+
+              { korisnik.Tip==1 && <Tab label="Uredi Knjige"/>}
+              { korisnik.Tip==1 && <Tab label="Iznajmljivanje"/>}
+              { korisnik.Tip==1 && <Tab label="Korisnici"/>}
+              { korisnik.Tip==1 && <Tab label="Recenzije"/>}
+              { korisnik.Tip==1 && <Tab label="Izveštaji"/>}
+
+              { korisnik.Tip==2 && <Tab label="Korisnici"/>}
+              { korisnik.Tip==2 && <Tab label="Izveštaji"/>}
+              
             </Tabs>
         </div>
-
-        <div margin-top = "10px">
-        
-            <IconButton onClick={() => navigate ("/nalog")}> <PersonOutlineIcon/></IconButton>
-        </div>
+        }
+         { korisnik != null &&
+          <div margin-top = "10px">
+              <IconButton onClick={() => navigate ("/nalog")}> <PersonOutlineIcon/></IconButton>
+              <Button color="secondary" onClick={() => navigate ("/login")}>Logout</Button>
+          </div>
+        }
         
       </Box>
     );
