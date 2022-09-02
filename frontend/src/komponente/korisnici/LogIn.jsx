@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 import AuthServis from "../../servisi/AuthServis";
 import axios from "axios";
 import Putanje from "../../konstante/Putanje";
+import { PropaneSharp } from "@mui/icons-material";
 
-const LogIn = () => {
+const LogIn = ({handleUlogovan}) => {
     const [email, setEmail] = useState("");
     const [lozinka, setLozinka] = useState("");
     const navigation = useNavigate();
@@ -28,11 +29,14 @@ const LogIn = () => {
           .then((response) => {
             console.log(response.data);
             AuthServis.postaviKorisnika(response.data);
+            handleUlogovan(true);
             navigation("/");
           })
           .catch((error) => {
             alert("Loši kredencijali.");
           });
+
+          
       };
 
 

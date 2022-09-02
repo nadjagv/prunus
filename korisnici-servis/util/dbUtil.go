@@ -33,6 +33,15 @@ var korisnici = []model.Korisnik{
 		Sumnjiv:        false,
 		Blokiran:       false,
 	},
+	{Email: "projekatxml@gmail.com",
+		Lozinka:        string(hashLozinka1),
+		Ime:            "Ljubica",
+		Prezime:        "Knjižić",
+		Tip:            model.TipKorisnika(1),
+		IstekClanarine: time.Time{},
+		Sumnjiv:        false,
+		Blokiran:       false,
+	},
 }
 
 var Database *gorm.DB

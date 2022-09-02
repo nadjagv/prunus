@@ -5,19 +5,25 @@ import {useNavigate} from "react-router-dom"
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import AuthServis from "../../servisi/AuthServis";
 
-const Header = () => {
-    const [value, setValue] = useState(0);
+const Header = ({ulogovan, handleUlogovan}) => {
+    const [value, setValue] = useState(0)
     const [korisnik, setKorisnik] = useState(null)
 
     useEffect(() => {
       setKorisnik(AuthServis.preuzmiKorisnika())
-    }, [])
+    }, [ulogovan])
 
     const navigate = useNavigate()
 
     const handleChange = (event, newValue) => {
       setValue(newValue);
     };
+
+    const izlogujKorisnika = ()=>{
+      AuthServis.ukloniKorisnika()
+      handleUlogovan(false)
+      navigate("/")
+    }
   
     return (
       <Box className = "navBar">
@@ -40,7 +46,7 @@ const Header = () => {
               { korisnik.Tip==0 && <Tab label="Pretplate"/>}
               { korisnik.Tip==0 && <Tab label="Preporuka"/>}
 
-              { korisnik.Tip==1 && <Tab label="Uredi Knjige"/>}
+              { korisnik.Tip==1 && <Tab label="Uredi Knjige" onClick={() => navigate("/uredi-knjige")}/>}
               { korisnik.Tip==1 && <Tab label="Iznajmljivanje"/>}
               { korisnik.Tip==1 && <Tab label="Korisnici"/>}
               { korisnik.Tip==1 && <Tab label="Recenzije"/>}
@@ -55,7 +61,7 @@ const Header = () => {
          { korisnik != null &&
           <div margin-top = "10px">
               <IconButton onClick={() => navigate ("/nalog")}> <PersonOutlineIcon/></IconButton>
-              <Button color="secondary" onClick={() => navigate ("/login")}>Logout</Button>
+              <Button color="secondary" onClick={() => izlogujKorisnika() }>Logout</Button>
           </div>
         }
         

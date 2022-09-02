@@ -40,7 +40,6 @@ func RutirajRecenzijeServis(app *fiber.App) {
 			fmt.Println(err)
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}
-		fmt.Println(body)
 		return c.Status(response.StatusCode).JSON(body)
 	})
 
@@ -73,7 +72,6 @@ func RutirajRecenzijeServis(app *fiber.App) {
 			fmt.Println(err)
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}
-		fmt.Println(body)
 		return c.Status(response.StatusCode).JSON(body)
 	})
 
@@ -91,7 +89,6 @@ func RutirajRecenzijeServis(app *fiber.App) {
 			fmt.Println(err)
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}
-		fmt.Println(body)
 		return c.Status(response.StatusCode).JSON(body)
 	})
 
@@ -108,7 +105,6 @@ func RutirajRecenzijeServis(app *fiber.App) {
 			fmt.Println(err)
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}
-		fmt.Println(body)
 		return c.Status(response.StatusCode).JSON(body)
 	})
 

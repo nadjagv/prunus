@@ -5,13 +5,20 @@ import Knjiga from './komponente/knjige/Knjiga'
 import {Route, Routes, Link} from "react-router-dom"
 import Header from "./komponente/header/Header"
 import LogIn from './komponente/korisnici/LogIn';
+import { useState } from 'react';
+import KnjigeTabela from './komponente/knjige/KnjigeTabela';
 
 
 function App() {
+  const [ulogovan, setUlogovan] = useState(false);
+
+  function handleUlogovan(v) {
+    setUlogovan(v);
+  }
   return (
     <>
 
-    <Header/>
+    <Header ulogovan = {ulogovan} handleUlogovan={handleUlogovan}/>
     <div>
       <Routes>
         <Route path="/" element = {<KnjigePregled/>} />
@@ -19,7 +26,9 @@ function App() {
           <Route index element= {<KnjigePregled/>}/>
           <Route path=":id" element= {<Knjiga/>}/>
         </Route>
-        <Route path="/login" element = {<LogIn/>} />
+        <Route path="/login" element = {<LogIn handleUlogovan={handleUlogovan}/>} />
+
+        <Route path="/uredi-knjige" element = {<KnjigeTabela/>} />
 
         <Route path = "*" element = {<h2>Stranica nije pronađena.</h2>}/>
       </Routes>
