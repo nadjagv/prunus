@@ -18,8 +18,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import Putanje from '../../konstante/Putanje';
-import { Button, Card, Grid } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -123,22 +121,7 @@ export default function KnjigeTabela() {
     }
 
   return (
-    <Grid
-  container
-  spacing={0}
-  direction="column"
-  alignItems="center"
-  justify="center"
-  style={{ minHeight: '100vh' }}
-    >
-        <Button variant="contained" startIcon={<AddIcon />}
-            size="large"
-            color = "success"
-            sx={{margin: 5}}
-            onClick={() => alert("dodaj")}>
-            Dodaj
-        </Button>
-        <TableContainer component={Paper} sx={{margin: 10, width: 0.8}}>
+    <TableContainer component={Paper} sx={{margin: 10, width: 0.8}}>
         <Table aria-label="collapsible table">
             <TableHead>
             <TableRow>
@@ -159,6 +142,5 @@ export default function KnjigeTabela() {
             </TableBody>
         </Table>
         </TableContainer>
-    </Grid>
   );
 }

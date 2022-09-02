@@ -6,7 +6,7 @@ import {Route, Routes, Link} from "react-router-dom"
 import Header from "./komponente/header/Header"
 import LogIn from './komponente/korisnici/LogIn';
 import { useState } from 'react';
-import KnjigeTabela from './komponente/knjige/KnjigeTabela';
+import KnjigeCRUDPregled from './komponente/knjige/KnjigeCRUDPregled';
 
 
 function App() {
@@ -28,7 +28,7 @@ function App() {
         </Route>
         <Route path="/login" element = {<LogIn handleUlogovan={handleUlogovan}/>} />
 
-        <Route path="/uredi-knjige" element = {<KnjigeTabela/>} />
+        <Route path="/uredi-knjige" element = {<KnjigeCRUDPregled/>} />
 
         <Route path = "*" element = {<h2>Stranica nije pronađena.</h2>}/>
       </Routes>
