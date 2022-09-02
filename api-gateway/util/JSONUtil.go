@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func GetJsonIC(response *http.Response, target interface{}) error {
+func GetJson(response *http.Response, target interface{}) error {
 	defer response.Body.Close()
 
 	return json.NewDecoder(response.Body).Decode(target)

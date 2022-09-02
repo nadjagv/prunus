@@ -23,7 +23,7 @@ func RutirajKnjigeServis(app *fiber.App) {
 		}
 
 		var body []dto.KnjigaSlikaDTO
-		err = util.GetJsonIC(response, &body)
+		err = util.GetJson(response, &body)
 		if err != nil {
 			fmt.Println(err)
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
@@ -39,7 +39,7 @@ func RutirajKnjigeServis(app *fiber.App) {
 		}
 
 		var body dto.KnjigaSlikaDTO
-		err = util.GetJsonIC(response, &body)
+		err = util.GetJson(response, &body)
 		if err != nil {
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}
@@ -54,7 +54,7 @@ func RutirajKnjigeServis(app *fiber.App) {
 		}
 
 		var body dto.KnjigaSlikaDTO
-		err = util.GetJsonIC(response, &body)
+		err = util.GetJson(response, &body)
 		if err != nil {
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}
@@ -134,7 +134,7 @@ func RutirajKnjigeServis(app *fiber.App) {
 		}
 
 		var body uint
-		err = util.GetJsonIC(response, &body)
+		err = util.GetJson(response, &body)
 		if err != nil {
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}
@@ -206,7 +206,7 @@ func RutirajKnjigeServis(app *fiber.App) {
 		}
 
 		var body []dto.PretplataDTO
-		err = util.GetJsonIC(response, &body)
+		err = util.GetJson(response, &body)
 		if err != nil {
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}

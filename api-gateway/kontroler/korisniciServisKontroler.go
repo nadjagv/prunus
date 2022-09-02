@@ -23,7 +23,7 @@ func RutirajKorisniciServis(app *fiber.App) {
 		}
 
 		var body dto.KorisnikTokenInfo
-		err = util.GetJsonIC(response, &body)
+		err = util.GetJson(response, &body)
 		if err != nil {
 			fmt.Println(err)
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
@@ -48,7 +48,7 @@ func RutirajKorisniciServis(app *fiber.App) {
 		}
 
 		var body []dto.KorisnikDTO
-		err = util.GetJsonIC(response, &body)
+		err = util.GetJson(response, &body)
 		if err != nil {
 			fmt.Println(err)
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
@@ -70,7 +70,7 @@ func RutirajKorisniciServis(app *fiber.App) {
 		}
 
 		var body dto.KorisnikDTO
-		err = util.GetJsonIC(response, &body)
+		err = util.GetJson(response, &body)
 		if err != nil {
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}
@@ -94,7 +94,7 @@ func RutirajKorisniciServis(app *fiber.App) {
 		}
 
 		var body dto.KorisnikDTO
-		err = util.GetJsonIC(response, &body)
+		err = util.GetJson(response, &body)
 		if err != nil {
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}

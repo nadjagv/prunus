@@ -34,6 +34,20 @@ impl RecenzijaServis{
         }
     }
 
+    pub fn preuzmi_odobrene_po_knjizi(&mut self, id: i32) -> Result<Vec<Recenzija>, String> {
+      match self.repo.preuzmi_odobrene_po_knjizi(id) {
+        Some(recenzije) => Ok(recenzije),
+        None => Err("Nema recenzija.".to_string())
+      }
+  }
+
+    pub fn preuzmi_za_pregled(&mut self) -> Result<Vec<Recenzija>, String> {
+      match self.repo.preuzmi_za_pregled(){
+        Some(recenzije) => Ok(recenzije),
+        None => Err("Nema recenzija.".to_string())
+      }
+  }
+
     pub fn kreiraj(&mut self, recenzija: Recenzija) -> Result<String, String> {
         match self.repo.kreiraj(recenzija) {
           Some(true) => Ok("Uspeh".to_string()),

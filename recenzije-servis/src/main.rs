@@ -19,10 +19,13 @@ fn main() {
             kontroler::kontroler::preuzmi_sve,
             kontroler::kontroler::preuzmi_po_id,
             kontroler::kontroler::preuzmi_sve_po_knjizi,
+            kontroler::kontroler::preuzmi_odobrene_po_knjizi,
+            kontroler::kontroler::preuzmi_za_pregled,
             kontroler::kontroler::kreiraj,
             kontroler::kontroler::obrisi,
             kontroler::kontroler::odobri,
             kontroler::kontroler::odbij,
+
         ])
         .launch();
 }

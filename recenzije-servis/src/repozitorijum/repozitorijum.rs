@@ -90,6 +90,44 @@ impl Repozitorijum {
         Some(recenzije)
     }
 
+    pub fn preuzmi_odobrene_po_knjizi(&mut self, id: i32) -> Option<Vec<Recenzija>> {
+ 
+      let mut recenzije: Vec<Recenzija> = vec![];
+  
+      let redovi = self.client.query("SELECT id, komentar, ocena, korisnik_id, knjiga_id, obrisano, status FROM recenzije WHERE obrisano = false AND knjiga_id=$1 AND status=1", &[&id]);
+  
+      if redovi.is_err() {
+        return None;
+      }
+      let unwraped_redovi = redovi.unwrap();
+  
+      for r in unwraped_redovi {
+  
+        recenzije.push(Self::mapiraj_na_recenziju(r))
+      }
+  
+      Some(recenzije)
+  }
+
+  pub fn preuzmi_za_pregled(&mut self) -> Option<Vec<Recenzija>> {
+ 
+    let mut recenzije: Vec<Recenzija> = vec![];
+
+    let redovi = self.client.query("SELECT id, komentar, ocena, korisnik_id, knjiga_id, obrisano, status FROM recenzije WHERE obrisano = false AND status=0", &[]);
+
+    if redovi.is_err() {
+      return None;
+    }
+    let unwraped_redovi = redovi.unwrap();
+
+    for r in unwraped_redovi {
+
+      recenzije.push(Self::mapiraj_na_recenziju(r))
+    }
+
+    Some(recenzije)
+}
+
     pub fn kreiraj(&mut self, recenzija: Recenzija) -> Option<bool>{
         let redovi = self.client.query("SELECT id, komentar, ocena, korisnik_id, knjiga_id, obrisano, status FROM recenzije WHERE korisnik_id = $1 AND knjiga_id=$2", &[&recenzija.korisnik_id, &recenzija.knjiga_id]);
     

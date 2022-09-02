@@ -12,6 +12,7 @@ pub fn preuzmi_sve() -> content::Json<String> {
   let mut s = servis::RecenzijaServis::new();
 
   let res = s.preuzmi_sve().expect("nema recenzija");
+  println!("{:?}", res.len());
 
   return content::Json(Json(json!(res)).to_string());
 }
@@ -32,6 +33,26 @@ pub fn preuzmi_sve_po_knjizi(id: i32) -> content::Json<String> {
   let mut s = servis::RecenzijaServis::new();
 
   let res = s.preuzmi_sve_po_knjizi(id).expect("nije pronadjeno");
+
+  return content::Json(Json(json!(res)).to_string());
+}
+
+#[get("/knjiga-odobreni/<id>", format = "application/json")]
+pub fn preuzmi_odobrene_po_knjizi(id: i32) -> content::Json<String> {
+  
+  let mut s = servis::RecenzijaServis::new();
+
+  let res = s.preuzmi_odobrene_po_knjizi(id).expect("nije pronadjeno");
+
+  return content::Json(Json(json!(res)).to_string());
+}
+
+#[get("/pregled/sve", format = "application/json")]
+pub fn preuzmi_za_pregled() -> content::Json<String> {
+  
+  let mut s = servis::RecenzijaServis::new();
+
+  let res = s.preuzmi_za_pregled().expect("nije pronadjeno");
 
   return content::Json(Json(json!(res)).to_string());
 }

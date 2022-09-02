@@ -35,7 +35,7 @@ func RutirajRezIznServis(app *fiber.App) {
 		}
 
 		var body []dto.RezervacijaDTO
-		err = util.GetJsonIC(response, &body)
+		err = util.GetJson(response, &body)
 		if err != nil {
 			fmt.Println(err)
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
@@ -60,7 +60,7 @@ func RutirajRezIznServis(app *fiber.App) {
 		}
 
 		var body dto.RezervacijaDTO
-		err = util.GetJsonIC(response, &body)
+		err = util.GetJson(response, &body)
 		if err != nil {
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}
@@ -150,7 +150,7 @@ func RutirajRezIznServis(app *fiber.App) {
 		}
 
 		var body []dto.IznajmljivanjeDTO
-		err = util.GetJsonIC(response, &body)
+		err = util.GetJson(response, &body)
 		if err != nil {
 			fmt.Println(err)
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
@@ -175,7 +175,7 @@ func RutirajRezIznServis(app *fiber.App) {
 		}
 
 		var body dto.IznajmljivanjeDTO
-		err = util.GetJsonIC(response, &body)
+		err = util.GetJson(response, &body)
 		if err != nil {
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}
@@ -200,7 +200,7 @@ func RutirajRezIznServis(app *fiber.App) {
 		}
 
 		var body []dto.IznajmljivanjeDTO
-		err = util.GetJsonIC(response, &body)
+		err = util.GetJson(response, &body)
 		if err != nil {
 			fmt.Println(err)
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
