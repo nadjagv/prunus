@@ -20,6 +20,7 @@ func main() {
 	kontroler.RutirajKnjigeServis(app)
 	kontroler.RutirajKorisniciServis(app)
 	kontroler.RutirajRezIznServis(app)
+	kontroler.RutirajRecenzijeServis(app)
 
 	log.Fatal(app.Listen(":8080"))
 }
