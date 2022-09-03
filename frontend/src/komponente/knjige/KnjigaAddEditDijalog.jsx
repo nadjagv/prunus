@@ -11,6 +11,7 @@ import { IconButton, MenuItem, Select } from '@mui/material';
 import { PhotoCamera } from '@mui/icons-material';
 import Putanje from '../../konstante/Putanje';
 import axios from "axios";
+import { useEffect } from 'react';
 
 const KnjigaAddEditDijalog = ({otvoren, zatvoriDijalog, dodavanjeMod, knjiga}) => {
   const [naziv, setNaziv] = useState("");
@@ -21,13 +22,13 @@ const KnjigaAddEditDijalog = ({otvoren, zatvoriDijalog, dodavanjeMod, knjiga}) =
   const [zanr, setZanr] = useState(0);
   const [brojStrana, setBrojStrana] = useState(0);
   const [godinaNastanka, setGodinaNastanka] = useState(1900);
-  const [ukupnaKolicina, setUkupnaKolicina] = useState(0);
+  const [ukupnaKolicina, setUkupnaKolicina] = useState(1);
 
-  const [file, setFile] = useState([]);
   const [base64URL, setBase64URL] = useState("");
 
 
   let dto = {
+    Id: knjiga!=null ? knjiga.Id : 0,
     Naziv: naziv,
     Isbn: isbn,
     ImeAutora: imeAutora,
@@ -40,15 +41,22 @@ const KnjigaAddEditDijalog = ({otvoren, zatvoriDijalog, dodavanjeMod, knjiga}) =
     Slika: base64URL
   }
 
-
-  const getBase64 = () => {
-    let reader = new FileReader();
-    reader.readAsDataURL(file);
-      reader.onload = () => {
-        setBase64URL(reader.result)
-      };
+  useEffect(()=>{
+    if (!dodavanjeMod){
+      setNaziv(knjiga.Naziv)
+      setIsbn(knjiga.Isbn)
+      setImeAutora(knjiga.ImeAutora)
+      setPrezimeAutora(knjiga.PrezimeAutora)
+      setOpis(knjiga.Opis)
+      setZanr(knjiga.Zanr)
+      setBrojStrana(knjiga.BrojStrana)
+      setGodinaNastanka(knjiga.GodinaNastanka)
+      setUkupnaKolicina(knjiga.UkupnaKolicina)
+    }
     
-  };
+    
+}, [])
+
 
   const handleFileInputChange = e => {
     let reader = new FileReader();
@@ -59,14 +67,25 @@ const KnjigaAddEditDijalog = ({otvoren, zatvoriDijalog, dodavanjeMod, knjiga}) =
   };
 
   function obradiPotvrdu (){
-    if (true){
-      console.log(base64URL)
+    if (dodavanjeMod){
       axios
           .post(Putanje.knjigeGWURL, dto)
           .then((response) => {
             console.log(response.data);
-            alert("Zahtev uspešno obrađen!");
             zatvoriDijalog()
+            alert("Zahtev uspešno obrađen!");
+            
+          })
+          .catch((error) => {
+            alert("Nije uspešno. Pokušajte ponovo.");
+          });
+    }else{
+      axios
+          .put(Putanje.knjigeGWURL, dto)
+          .then((response) => {
+            console.log(response.data);
+            zatvoriDijalog()
+            alert("Zahtev uspešno obrađen!");
           })
           .catch((error) => {
             alert("Nije uspešno. Pokušajte ponovo.");
@@ -85,6 +104,7 @@ const KnjigaAddEditDijalog = ({otvoren, zatvoriDijalog, dodavanjeMod, knjiga}) =
           placeholder="Unesite naziv knjige"
           fullWidth
           required
+          defaultValue={naziv}
           onChange={(e) => {
               setNaziv(e.target.value);
           }}
@@ -96,6 +116,7 @@ const KnjigaAddEditDijalog = ({otvoren, zatvoriDijalog, dodavanjeMod, knjiga}) =
           placeholder="Unesite ISBN"
           fullWidth
           required
+          defaultValue={isbn}
           onChange={(e) => {
               setIsbn(e.target.value);
           }}
@@ -106,6 +127,7 @@ const KnjigaAddEditDijalog = ({otvoren, zatvoriDijalog, dodavanjeMod, knjiga}) =
           placeholder="Unesite ime autora"
           fullWidth
           required
+          defaultValue={imeAutora}
           onChange={(e) => {
               setImeAutora(e.target.value);
           }}
@@ -116,6 +138,7 @@ const KnjigaAddEditDijalog = ({otvoren, zatvoriDijalog, dodavanjeMod, knjiga}) =
           placeholder="Unesite prezime autora"
           fullWidth
           required
+          defaultValue={prezimeAutora}
           onChange={(e) => {
               setPrezimeAutora(e.target.value);
           }}
@@ -126,6 +149,7 @@ const KnjigaAddEditDijalog = ({otvoren, zatvoriDijalog, dodavanjeMod, knjiga}) =
           placeholder="Unesite opis"
           fullWidth
           required
+          defaultValue={opis}
           onChange={(e) => {
               setOpis(e.target.value);
           }}
@@ -137,6 +161,7 @@ const KnjigaAddEditDijalog = ({otvoren, zatvoriDijalog, dodavanjeMod, knjiga}) =
               label="Žanr"
               fullWidth
               required
+              defaultValue={zanr}
               onChange={(e) => {
                 console.log(e.target.value)
                 setZanr(e.target.value);
@@ -163,6 +188,7 @@ const KnjigaAddEditDijalog = ({otvoren, zatvoriDijalog, dodavanjeMod, knjiga}) =
             margin="normal"
             label="Broj strana"
             type="number"
+            defaultValue={brojStrana}
             placeholder="Unesite broj strana"
             fullWidth
             required
@@ -174,6 +200,7 @@ const KnjigaAddEditDijalog = ({otvoren, zatvoriDijalog, dodavanjeMod, knjiga}) =
             <TextField
             margin="normal"
             label="Godina nastanka"
+            defaultValue={godinaNastanka}
             type="number"
             placeholder="Unesite godinu nastanka"
             fullWidth
@@ -186,6 +213,7 @@ const KnjigaAddEditDijalog = ({otvoren, zatvoriDijalog, dodavanjeMod, knjiga}) =
             <TextField
             margin="normal"
             label="Ukupna količina"
+            defaultValue={ukupnaKolicina}
             type="number"
             placeholder="Unesite ukupnu količinu"
             fullWidth

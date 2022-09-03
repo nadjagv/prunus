@@ -66,11 +66,13 @@ func OtkrijEndpointe() {
 		var payload model.KnjigaDTO
 		err := c.BodyParser(&payload)
 		if err != nil {
+			fmt.Println(err)
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 
 		err = servis.Izmeni(payload)
 		if err != nil {
+			fmt.Println(err)
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 		return c.SendStatus(fiber.StatusOK)

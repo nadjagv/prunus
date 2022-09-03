@@ -6,6 +6,8 @@ import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from "react-router-dom"
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { green, purple } from '@mui/material/colors';
+import AuthServis from './servisi/AuthServis';
+import axios from "axios";
 
 const theme = createTheme({
   palette: {
@@ -26,6 +28,14 @@ const theme = createTheme({
 
     
   },
+});
+
+axios.interceptors.request.use((request) => {
+  let korisnik = AuthServis.preuzmiKorisnika();
+  if (korisnik) {
+    request.headers.Authorization = "Bearer " + korisnik.Token;
+  }
+  return request;
 });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

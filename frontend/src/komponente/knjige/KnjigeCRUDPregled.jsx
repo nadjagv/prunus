@@ -5,7 +5,7 @@ import KnjigeTabela from "./KnjigeTabela";
 import { useState } from "react";
 import KnjigaAddEditDijalog from "./KnjigaAddEditDijalog";
 
-const KnjigeCRUDPregled = ({knjiga}) =>{
+const KnjigeCRUDPregled = () =>{
     const [dijalogOtvoren, setDijalogOtvoren] = useState(false);
 
     function toggleDijalog(){
@@ -24,6 +24,7 @@ const KnjigeCRUDPregled = ({knjiga}) =>{
             <KnjigaAddEditDijalog
                otvoren={dijalogOtvoren}
                zatvoriDijalog={toggleDijalog}
+               dodavanjeMod={true}
                />
             <Button variant="contained" startIcon={<AddIcon />}
                 size="large"

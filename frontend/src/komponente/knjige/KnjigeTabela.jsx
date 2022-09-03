@@ -20,14 +20,36 @@ import { useEffect } from 'react';
 import Putanje from '../../konstante/Putanje';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import KnjigaAddEditDijalog from './KnjigaAddEditDijalog';
+import axios from "axios";
 
 
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
 
+  const [dijalogOtvoren, setDijalogOtvoren] = useState(false);
+
+    function toggleDijalog(){
+        setDijalogOtvoren(!dijalogOtvoren)
+    }
+
+    function obrisi(){
+        axios
+          .delete(`${Putanje.knjigeGWURL}/${row.Id}`)
+          .then((response) => {
+            console.log(response.data);
+            alert("Brisanje uspešno!");
+          })
+          .catch((error) => {
+            alert("Nije uspešno. Pokušajte ponovo.");
+          });
+    }
+
   return (
     <React.Fragment>
+        
+
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
         <TableCell>
           <IconButton
@@ -39,17 +61,23 @@ function Row(props) {
           </IconButton>
         </TableCell>
         
+        <TableCell>{row.Id}</TableCell>
         <TableCell>{row.Naziv}</TableCell>
         <TableCell align="right">{row.Isbn}</TableCell>
         <TableCell align="right">{row.ImeAutora} {row.PrezimeAutora}</TableCell>
         <TableCell align="right">{Object.keys(Zanr).find(key => Zanr[key] === row.Zanr)}</TableCell>
         <TableCell/>
         <TableCell>
+        <KnjigaAddEditDijalog
+               otvoren={dijalogOtvoren}
+               zatvoriDijalog={toggleDijalog}
+               knjiga = {row}
+               />
           <IconButton
             aria-label="expand row"
             size="small"
             color = "primary"
-            onClick={() => alert("promeni")}
+            onClick={()=>toggleDijalog()}
           >
            <EditIcon></EditIcon>
           </IconButton>
@@ -58,7 +86,7 @@ function Row(props) {
           <IconButton
             aria-label="expand row"
             size="small"
-            onClick={() => alert("izbrisi")}
+            onClick={() => obrisi()}
           >
             <DeleteIcon></DeleteIcon>
           </IconButton>
@@ -126,6 +154,7 @@ export default function KnjigeTabela() {
             <TableHead>
             <TableRow>
                 <TableCell />
+                <TableCell><b>Id</b></TableCell>
                 <TableCell><b>Naziv</b></TableCell>
                 <TableCell align="right"><b>Isbn</b></TableCell>
                 <TableCell align="right"><b>Autor</b></TableCell>
@@ -135,11 +164,14 @@ export default function KnjigeTabela() {
               </TableCell>
             </TableRow>
             </TableHead>
+            {knjige!= null &&
             <TableBody>
             {knjige.map((row) => (
                 <Row key={row.Id} row={row} />
             ))}
+
             </TableBody>
+            }
         </Table>
         </TableContainer>
   );

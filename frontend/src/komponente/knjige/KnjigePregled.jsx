@@ -23,19 +23,18 @@ const KnjigePregled = () =>{
     return (
         <div>
 
-            {knjige.length > 0 ? (
+            
                 <div className = "container">
-                    {knjige.map((knjiga) => (
+                    {knjige!=null ? knjige.map((knjiga) => (
                         <div onClick={() => navigate("/knjige/" + knjiga.Id)}>
                             <KnjigaKartica knjiga={knjiga} key = {knjiga.Isbn}/>
                         </div>
-                    ))}
+                    )) : 
+                        <div className = "empty">
+                            <h2>Nema knjiga za pregled.</h2>
+                        </div>
+                    }
                 </div>
-            ):(
-                <div className = "empty">
-                    <h2>Nema knjiga za pregled.</h2>
-                </div>
-            )}
 
         </div>
     )
