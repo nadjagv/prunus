@@ -7,6 +7,7 @@ import Header from "./komponente/header/Header"
 import LogIn from './komponente/korisnici/LogIn';
 import { useState } from 'react';
 import KnjigeCRUDPregled from './komponente/knjige/KnjigeCRUDPregled';
+import KnjigeTabela from './komponente/knjige/KnjigeTabela';
 
 
 function App() {
@@ -28,7 +29,7 @@ function App() {
         </Route>
         <Route path="/login" element = {<LogIn handleUlogovan={handleUlogovan}/>} />
 
-        <Route path="/uredi-knjige" element = {<KnjigeCRUDPregled/>} />
+        <Route path="/uredi-knjige" element = {<KnjigeTabela/>} />
 
         <Route path = "*" element = {<h2>Stranica nije pronađena.</h2>}/>
       </Routes>

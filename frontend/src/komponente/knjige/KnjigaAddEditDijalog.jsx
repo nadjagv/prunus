@@ -72,7 +72,7 @@ const KnjigaAddEditDijalog = ({otvoren, zatvoriDijalog, dodavanjeMod, knjiga}) =
           .post(Putanje.knjigeGWURL, dto)
           .then((response) => {
             console.log(response.data);
-            zatvoriDijalog()
+            zatvoriDijalog(true)
             alert("Zahtev uspešno obrađen!");
             
           })
@@ -84,13 +84,16 @@ const KnjigaAddEditDijalog = ({otvoren, zatvoriDijalog, dodavanjeMod, knjiga}) =
           .put(Putanje.knjigeGWURL, dto)
           .then((response) => {
             console.log(response.data);
-            zatvoriDijalog()
+            zatvoriDijalog(true)
             alert("Zahtev uspešno obrađen!");
           })
           .catch((error) => {
             alert("Nije uspešno. Pokušajte ponovo.");
           });
     }
+  }
+  function odustani(){
+    zatvoriDijalog(false)
   }
 
   return (
@@ -230,7 +233,7 @@ const KnjigaAddEditDijalog = ({otvoren, zatvoriDijalog, dodavanjeMod, knjiga}) =
           </IconButton>
         </DialogContent>
         <DialogActions>
-          <Button onClick={zatvoriDijalog}>Odustani</Button>
+          <Button onClick={odustani}>Odustani</Button>
           <Button onClick={obradiPotvrdu}>Potvrdi</Button>
         </DialogActions>
       </Dialog>

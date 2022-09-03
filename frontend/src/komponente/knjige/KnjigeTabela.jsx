@@ -22,16 +22,20 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import KnjigaAddEditDijalog from './KnjigaAddEditDijalog';
 import axios from "axios";
+import { Button, Grid } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
 
-function Row(props) {
-  const { row } = props;
+function Row({row, ponovoPreuzmi}) {
   const [open, setOpen] = React.useState(false);
 
   const [dijalogOtvoren, setDijalogOtvoren] = useState(false);
 
-    function toggleDijalog(){
+    function toggleDijalogEdit(promenjeno){
         setDijalogOtvoren(!dijalogOtvoren)
+        if (promenjeno){
+            ponovoPreuzmi()
+        }
     }
 
     function obrisi(){
@@ -70,14 +74,15 @@ function Row(props) {
         <TableCell>
         <KnjigaAddEditDijalog
                otvoren={dijalogOtvoren}
-               zatvoriDijalog={toggleDijalog}
+               zatvoriDijalog={toggleDijalogEdit}
+
                knjiga = {row}
                />
           <IconButton
             aria-label="expand row"
             size="small"
             color = "primary"
-            onClick={()=>toggleDijalog()}
+            onClick={()=>toggleDijalogEdit()}
           >
            <EditIcon></EditIcon>
           </IconButton>
@@ -133,6 +138,14 @@ function Row(props) {
 
 export default function KnjigeTabela() {
     const [knjige, setKnjige] = useState([])
+    const [dijalogOtvoren, setDijalogOtvoren] = useState(false);
+
+    function toggleDijalog(promenjeno){
+        setDijalogOtvoren(!dijalogOtvoren)
+        if (promenjeno){
+            preuzmiSve()
+        }
+    }
 
     const navigate = useNavigate()
 
@@ -149,6 +162,27 @@ export default function KnjigeTabela() {
     }
 
   return (
+    <Grid
+      container
+      spacing={0}
+      direction="column"
+      alignItems="center"
+      justify="center"
+      style={{ minHeight: '100vh' }}
+        >
+            <KnjigaAddEditDijalog
+               otvoren={dijalogOtvoren}
+               zatvoriDijalog={toggleDijalog}
+               dodavanjeMod={true}
+               />
+            <Button variant="contained" startIcon={<AddIcon />}
+                size="large"
+                color = "success"
+                sx={{margin: 5}}
+                onClick={()=>toggleDijalog()}>
+                Dodaj
+            </Button>
+    
     <TableContainer component={Paper} sx={{margin: 10, width: 0.8}}>
         <Table aria-label="collapsible table">
             <TableHead>
@@ -167,12 +201,13 @@ export default function KnjigeTabela() {
             {knjige!= null &&
             <TableBody>
             {knjige.map((row) => (
-                <Row key={row.Id} row={row} />
+                <Row key={row.Id} row={row} ponovoPreuzmi={preuzmiSve} />
             ))}
 
             </TableBody>
             }
         </Table>
         </TableContainer>
+    </Grid>
   );
 }
