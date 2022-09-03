@@ -24,6 +24,8 @@ import KnjigaAddEditDijalog from './KnjigaAddEditDijalog';
 import axios from "axios";
 import { Button, Grid } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import SwapVertIcon from '@mui/icons-material/SwapVert';
+import useSortableData from '../../util/SortUtil';
 
 
 function Row({row, ponovoPreuzmi}) {
@@ -43,6 +45,7 @@ function Row({row, ponovoPreuzmi}) {
           .delete(`${Putanje.knjigeGWURL}/${row.Id}`)
           .then((response) => {
             console.log(response.data);
+            ponovoPreuzmi()
             alert("Brisanje uspešno!");
           })
           .catch((error) => {
@@ -140,14 +143,20 @@ export default function KnjigeTabela() {
     const [knjige, setKnjige] = useState([])
     const [dijalogOtvoren, setDijalogOtvoren] = useState(false);
 
+    const { items, requestSort, sortConfig } = useSortableData(knjige);
+    const getClassNamesFor = (name) => {
+        if (!sortConfig) {
+        return;
+        }
+        return sortConfig.key === name ? sortConfig.direction : undefined;
+    };
+
     function toggleDijalog(promenjeno){
         setDijalogOtvoren(!dijalogOtvoren)
         if (promenjeno){
             preuzmiSve()
         }
     }
-
-    const navigate = useNavigate()
 
     useEffect(()=>{
         preuzmiSve()
@@ -160,6 +169,8 @@ export default function KnjigeTabela() {
         console.log(data)
         setKnjige(data)
     }
+
+    
 
   return (
     <Grid
@@ -188,19 +199,68 @@ export default function KnjigeTabela() {
             <TableHead>
             <TableRow>
                 <TableCell />
-                <TableCell><b>Id</b></TableCell>
-                <TableCell><b>Naziv</b></TableCell>
-                <TableCell align="right"><b>Isbn</b></TableCell>
-                <TableCell align="right"><b>Autor</b></TableCell>
-                <TableCell align="right"><b>Žanr</b></TableCell>
+                <TableCell>
+                <IconButton
+                    size="small"
+                    onClick={() => requestSort('Id')}
+                    className={getClassNamesFor('Id')}
+                >
+                    <SwapVertIcon></SwapVertIcon>
+                </IconButton>
+                    <b>Id</b>
+                </TableCell>
+                <TableCell>
+                <IconButton
+                    aria-label="expand row"
+                    size="small"
+                    onClick={() => requestSort('Naziv')}
+                    className={getClassNamesFor('Naziv')}
+                >
+                    <SwapVertIcon></SwapVertIcon>
+                </IconButton>
+                    <b>Naziv</b>
+                </TableCell>
+                <TableCell align="right">
+                    <IconButton
+                        aria-label="expand row"
+                        size="small"
+                        onClick={() => requestSort('Isbn')}
+                        className={getClassNamesFor('Isbn')}
+                    >
+                        <SwapVertIcon></SwapVertIcon>
+                    </IconButton>
+                    <b>Isbn</b>
+                </TableCell>
+                <TableCell align="right">
+                    <IconButton
+                        aria-label="expand row"
+                        size="small"
+                        onClick={() => requestSort('ImeAutora')}
+                        className={getClassNamesFor('ImeAutora')}
+                    >
+                        <SwapVertIcon></SwapVertIcon>
+                    </IconButton>
+                    <b>Autor</b>
+                </TableCell>
+                <TableCell align="right">
+                <IconButton
+                    aria-label="expand row"
+                    size="small"
+                    onClick={() => requestSort('Zanr')}
+                    className={getClassNamesFor('Zanr')}
+                >
+                    <SwapVertIcon></SwapVertIcon>
+                </IconButton>
+                    <b>Žanr</b>
+                </TableCell>
                 <TableCell align="center" colSpan={3}>
                 <b>Uredi</b>
               </TableCell>
             </TableRow>
             </TableHead>
-            {knjige!= null &&
+            {items!= null &&
             <TableBody>
-            {knjige.map((row) => (
+            {items.map((row) => (
                 <Row key={row.Id} row={row} ponovoPreuzmi={preuzmiSve} />
             ))}
 

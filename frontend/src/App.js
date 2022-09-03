@@ -6,7 +6,6 @@ import {Route, Routes, Link} from "react-router-dom"
 import Header from "./komponente/header/Header"
 import LogIn from './komponente/korisnici/LogIn';
 import { useState } from 'react';
-import KnjigeCRUDPregled from './komponente/knjige/KnjigeCRUDPregled';
 import KnjigeTabela from './komponente/knjige/KnjigeTabela';
 
 
