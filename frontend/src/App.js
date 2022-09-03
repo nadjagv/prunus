@@ -8,6 +8,7 @@ import LogIn from './komponente/korisnici/LogIn';
 import { useState } from 'react';
 import KnjigeTabela from './komponente/knjige/KnjigeTabela';
 import KorisniciTabela from './komponente/korisnici/KorisniciTabela';
+import KorisnikNalogForma from './komponente/korisnici/KorisnikNalogForma';
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
           <Route path=":id" element= {<Knjiga/>}/>
         </Route>
         <Route path="/login" element = {<LogIn handleUlogovan={handleUlogovan}/>} />
+        <Route path="/registracija" element = {<KorisnikNalogForma dodavanjeMod={true}/>} />
 
         <Route path="/uredi-knjige" element = {<KnjigeTabela/>} />
         <Route path="/korisnici" element = {<KorisniciTabela/>} />
