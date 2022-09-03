@@ -91,6 +91,7 @@ func Izmeni(dto model.KorisnikDTO) error {
 	}
 	zaIzmenu.Ime = dto.Ime
 	zaIzmenu.Prezime = dto.Prezime
+	zaIzmenu.Tip = dto.Tip
 
 	err = repozitorijum.Izmeni(zaIzmenu)
 	return err

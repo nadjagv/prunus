@@ -48,11 +48,11 @@ const Header = ({ulogovan, handleUlogovan}) => {
 
               { korisnik.Tip==1 && <Tab label="Uredi Knjige" onClick={() => navigate("/uredi-knjige")}/>}
               { korisnik.Tip==1 && <Tab label="Iznajmljivanje"/>}
-              { korisnik.Tip==1 && <Tab label="Korisnici"/>}
+              { korisnik.Tip==1 && <Tab label="Korisnici"onClick={() => navigate("/korisnici")}/>}
               { korisnik.Tip==1 && <Tab label="Recenzije"/>}
               { korisnik.Tip==1 && <Tab label="Izveštaji"/>}
 
-              { korisnik.Tip==2 && <Tab label="Korisnici"/>}
+              { korisnik.Tip==2 && <Tab label="Korisnici" onClick={() => navigate("/korisnici")}/>}
               { korisnik.Tip==2 && <Tab label="Izveštaji"/>}
               
             </Tabs>

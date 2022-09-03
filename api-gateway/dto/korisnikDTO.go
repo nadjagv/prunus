@@ -13,6 +13,7 @@ const (
 )
 
 type KorisnikDTO struct {
+	Id             uint
 	Email          string
 	Lozinka        string
 	Ime            string

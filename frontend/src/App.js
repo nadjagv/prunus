@@ -7,6 +7,7 @@ import Header from "./komponente/header/Header"
 import LogIn from './komponente/korisnici/LogIn';
 import { useState } from 'react';
 import KnjigeTabela from './komponente/knjige/KnjigeTabela';
+import KorisniciTabela from './komponente/korisnici/KorisniciTabela';
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
         <Route path="/login" element = {<LogIn handleUlogovan={handleUlogovan}/>} />
 
         <Route path="/uredi-knjige" element = {<KnjigeTabela/>} />
+        <Route path="/korisnici" element = {<KorisniciTabela/>} />
 
         <Route path = "*" element = {<h2>Stranica nije pronađena.</h2>}/>
       </Routes>

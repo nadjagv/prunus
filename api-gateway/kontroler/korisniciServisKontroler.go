@@ -37,7 +37,7 @@ func RutirajKorisniciServis(app *fiber.App) {
 		if err != nil {
 			return c.SendStatus(fiber.StatusUnauthorized)
 		}
-		if tip != 2 {
+		if tip != 2 && tip != 1 {
 			return c.SendStatus(fiber.StatusUnauthorized)
 		}
 		print("Zahtev poslao: " + email + "\n")
