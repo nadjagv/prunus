@@ -15,7 +15,6 @@ func OtkrijEndpointe() {
 	app := fiber.New()
 
 	app.Get("/", func(c *fiber.Ctx) error {
-		println("alfhlsf")
 		knjige := servis.PreuzmiSve()
 		var rezultat []model.KnjigaSlikaDTO
 		for _, knjiga := range knjige {
@@ -50,11 +49,13 @@ func OtkrijEndpointe() {
 		var payload model.KnjigaDTO
 		err := c.BodyParser(&payload)
 		if err != nil {
+			fmt.Println(err)
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 
 		err = servis.Kreiraj(payload)
 		if err != nil {
+			fmt.Println(err)
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 		return c.SendStatus(fiber.StatusOK)

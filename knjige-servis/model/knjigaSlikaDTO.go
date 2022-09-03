@@ -1,8 +1,10 @@
 package model
 
 import (
+	"bytes"
 	"fmt"
 	"image"
+	"strings"
 
 	"encoding/base64"
 	"io/ioutil"
@@ -11,7 +13,9 @@ import (
 	"os"
 	"path/filepath"
 
+	"image/jpeg"
 	_ "image/jpeg"
+	"image/png"
 )
 
 type KnjigaSlikaDTO struct {
@@ -111,4 +115,26 @@ func ucitajSlikuSaPutanje(putanja string) (image.Image, error) {
 
 	slika, _, err := image.Decode(f)
 	return slika, err
+}
+
+func KonvertujIzBase64USliku(base64Slika string, putanja string) {
+	indeks := strings.Index(string(base64Slika), ",")
+	mimeType := strings.TrimSuffix(base64Slika[5:indeks], ";base64")
+	rawImage := string(base64Slika)[indeks+1:]
+
+	unbased, _ := base64.StdEncoding.DecodeString(rawImage)
+	r := bytes.NewReader(unbased)
+
+	var im image.Image
+
+	switch mimeType {
+	case "image/jpeg":
+		im, _ = jpeg.Decode(r)
+		f, _ := os.OpenFile(putanja, os.O_WRONLY|os.O_CREATE, 0777)
+		_ = jpeg.Encode(f, im, &jpeg.Options{Quality: 75})
+	case "image/png":
+		im, _ = png.Decode(r)
+		f, _ := os.OpenFile(putanja, os.O_WRONLY|os.O_CREATE, 0777)
+		_ = png.Encode(f, im)
+	}
 }

@@ -8,7 +8,9 @@ import (
 	model "knjige-servis/model"
 	repozitorijum "knjige-servis/repozitorijum"
 	"net/http"
+	"os"
 	"strconv"
+	"strings"
 )
 
 func PreuzmiSve() []model.Knjiga {
@@ -30,7 +32,24 @@ func Kreiraj(dto model.KnjigaDTO) error {
 		return errors.New("broj strana i ukupna količina knjige u biblioteci moraju biti pozitivni brojevi")
 	}
 
-	dto.Slika = "default.jpg"
+	if dto.Slika == "" {
+		dto.Slika = "default.jpg"
+	} else {
+		base64Slika := dto.Slika
+		indeks := strings.Index(string(base64Slika), ",")
+		mimeType := strings.TrimSuffix(base64Slika[5:indeks], ";base64")
+
+		putanja := ""
+		switch mimeType {
+		case "image/jpeg":
+			putanja = dto.Isbn + ".jpg"
+		case "image/png":
+			putanja = dto.Isbn + ".png"
+		}
+		sep := string(os.PathSeparator)
+		model.KonvertujIzBase64USliku(base64Slika, "slike"+sep+putanja)
+		dto.Slika = putanja
+	}
 	dto.TrenutnoDostupno = dto.UkupnaKolicina
 	dto.BrojOcena = 0
 	err := repozitorijum.Kreiraj(dto.MapirajNaObjekat())

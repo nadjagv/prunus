@@ -62,18 +62,19 @@ func RutirajKnjigeServis(app *fiber.App) {
 	})
 
 	app.Post(prefiks, func(c *fiber.Ctx) error {
-		authHeaderStr := string(c.Request().Header.Peek("Authorization"))
-		email, tip, err := util.Autentifikuj(authHeaderStr[7:])
-		if err != nil {
-			return c.SendStatus(fiber.StatusUnauthorized)
-		}
-		if tip != 1 {
-			return c.SendStatus(fiber.StatusUnauthorized)
-		}
-		print("Zahtev poslao: " + email + "\n")
+		// authHeaderStr := string(c.Request().Header.Peek("Authorization"))
+		// email, tip, err := util.Autentifikuj(authHeaderStr[7:])
+		// if err != nil {
+		// 	return c.SendStatus(fiber.StatusUnauthorized)
+		// }
+		// if tip != 1 {
+		// 	return c.SendStatus(fiber.StatusUnauthorized)
+		// }
+		// print("Zahtev poslao: " + email + "\n")
 
 		response, err := http.Post(knjigeServisUrl, "application/json", bytes.NewReader(c.Body()))
 		if err != nil {
+			fmt.Println(err)
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}
 		return c.SendStatus(response.StatusCode)
