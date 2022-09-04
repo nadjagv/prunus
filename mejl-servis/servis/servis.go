@@ -10,7 +10,7 @@ var port = "587"
 var address = host + ":" + port
 
 func PosaljiMejl(subject string, body string, mejlAdresa string) error {
-	message := []byte("Subject:" + subject + "\n" + body)
+	message := []byte("Subject:" + subject + "\n\n" + body)
 
 	to := []string{mejlAdresa}
 

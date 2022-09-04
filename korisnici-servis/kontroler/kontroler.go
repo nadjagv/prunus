@@ -32,7 +32,7 @@ func OtkrijEndpointe() {
 			return c.SendStatus(fiber.StatusUnauthorized)
 		}
 
-		rokIsteka := time.Now().Add(time.Minute * 5)
+		rokIsteka := time.Now().Add(time.Minute * 30)
 		claims := &util.Claims{
 			Email: korisnik.Email,
 			Tip:   korisnik.Tip,
@@ -175,20 +175,46 @@ func OtkrijEndpointe() {
 		return c.SendStatus(fiber.StatusOK)
 	})
 
-	app.Put("/blokiraj/:id", func(c *fiber.Ctx) error {
+	app.Post("/opomeni/:id", func(c *fiber.Ctx) error {
 		idStr := c.Params("id")
 		id, err := strconv.ParseUint(idStr, 10, 64)
 		if err != nil {
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 
-		var payload string
-		err = c.BodyParser(&payload)
+		err = servis.Opomeni(uint(id))
+		if err != nil {
+			return fiber.NewError(fiber.StatusNotFound, err.Error())
+		}
+		return c.SendStatus(fiber.StatusOK)
+	})
+
+	app.Put("/blokiraj/:id", func(c *fiber.Ctx) error {
+		idStr := c.Params("id")
+		id, err := strconv.ParseUint(idStr, 10, 64)
+		if err != nil {
+			fmt.Println("ojj")
+			fmt.Println(err)
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+
+		err = servis.Blokiraj(uint(id), string(c.Body()))
+		if err != nil {
+			fmt.Println("hrh")
+			fmt.Println(err)
+			return fiber.NewError(fiber.StatusNotFound, err.Error())
+		}
+		return c.SendStatus(fiber.StatusOK)
+	})
+
+	app.Put("/odblokiraj/:id", func(c *fiber.Ctx) error {
+		idStr := c.Params("id")
+		id, err := strconv.ParseUint(idStr, 10, 64)
 		if err != nil {
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 
-		err = servis.Blokiraj(uint(id), payload)
+		err = servis.Odblokiraj(uint(id))
 		if err != nil {
 			return fiber.NewError(fiber.StatusNotFound, err.Error())
 		}

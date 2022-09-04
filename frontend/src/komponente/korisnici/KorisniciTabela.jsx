@@ -18,7 +18,7 @@ import Putanje from '../../konstante/Putanje';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from "axios";
-import { Button, Grid } from '@mui/material';
+import { Button, Grid, Stack } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import useSortableData from '../../util/SortUtil';
@@ -27,15 +27,26 @@ import KnjigaAddEditDijalog from '../knjige/KnjigaAddEditDijalog';
 import { format } from 'date-fns-tz';
 import AuthServis from '../../servisi/AuthServis';
 import KorisnikAddEditDijalog from './KorisnikAddEditDijalog';
+import BlockIcon from '@mui/icons-material/Block';
+import { Warning } from '@mui/icons-material';
+import ObrazlozenjeBlokiranjaDijalog from './ObrazlozenjeBlokiranjaDijalog';
 
 
 function Row({row, ponovoPreuzmi, admin}) {
   const [open, setOpen] = React.useState(false);
 
   const [dijalogOtvoren, setDijalogOtvoren] = useState(false);
+  const [obrazlozenjeOtvoren, setObrazlozenjeOtvoren] = useState(false);
 
     function toggleDijalogEdit(promenjeno){
         setDijalogOtvoren(!dijalogOtvoren)
+        if (promenjeno){
+            ponovoPreuzmi()
+        }
+    }
+
+    function toggleDijalogObrazlozenje(promenjeno){
+        setObrazlozenjeOtvoren(!obrazlozenjeOtvoren)
         if (promenjeno){
             ponovoPreuzmi()
         }
@@ -48,6 +59,46 @@ function Row({row, ponovoPreuzmi, admin}) {
             console.log(response.data);
             ponovoPreuzmi()
             alert("Brisanje uspešno!");
+          })
+          .catch((error) => {
+            alert("Nije uspešno. Pokušajte ponovo.");
+          });
+    }
+
+    function produziClanarinu(){
+        axios
+          .put(`${Putanje.korisniciGWURL}/produzi-clanarinu/${row.Id}`)
+          .then((response) => {
+            console.log(response.data);
+            ponovoPreuzmi()
+            alert("Clanarina produzena.");
+          })
+          .catch((error) => {
+            alert("Nije uspešno. Pokušajte ponovo.");
+          });
+    }
+
+    function opomeni(){
+        axios
+          .post(`${Putanje.korisniciGWURL}/opomeni/${row.Id}`)
+          .then((response) => {
+            console.log(response.data);
+            ponovoPreuzmi()
+            alert("Poslata opomena.");
+          })
+          .catch((error) => {
+            alert("Nije uspešno. Pokušajte ponovo.");
+          });
+    }
+
+
+    function odblokiraj(){
+        axios
+          .put(`${Putanje.korisniciGWURL}/odblokiraj/${row.Id}`)
+          .then((response) => {
+            console.log(response.data);
+            ponovoPreuzmi()
+            alert("Korisnik odblokiran.");
           })
           .catch((error) => {
             alert("Nije uspešno. Pokušajte ponovo.");
@@ -72,6 +123,16 @@ function Row({row, ponovoPreuzmi, admin}) {
             onClick={() => setOpen(!open)}
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {row.Sumnjiv && !row.Blokiran && <Warning color="warning"/>}
+            {row.Sumnjiv && row.Blokiran && <BlockIcon  color="error"/>}
           </IconButton>
         </TableCell>
         
@@ -116,12 +177,44 @@ function Row({row, ponovoPreuzmi, admin}) {
           <Collapse in={open} timeout="auto" unmountOnExit>
             { row.Tip == 0 &&
             <Box sx={{ margin: 1 }}>
+            <ObrazlozenjeBlokiranjaDijalog
+               otvoren={obrazlozenjeOtvoren}
+               zatvoriDijalog={toggleDijalogObrazlozenje}
+               korisnikId = {row.Id}
+               />
               <Typography variant="h6" gutterBottom component="div">
                 Detalji
               </Typography>
               <Typography  gutterBottom component="div">
                 Istek članarine: {istekClanarineFormatiran}
               </Typography>
+              <Stack spacing={2} direction="row">
+              {!row.Blokiran && !admin && <Button 
+                color="primary" 
+                variant="contained"
+                onClick={() => produziClanarinu()}>
+                    Produži članarinu
+                </Button>}
+
+              {row.Sumnjiv && !row.Blokiran && <Button 
+                color="primary" 
+                variant="contained"
+                onClick={() => opomeni()}>
+                    Opomeni
+                </Button>}
+              {row.Sumnjiv && !row.Blokiran && <Button 
+                color="error" 
+                variant="contained"
+                onClick={() => toggleDijalogObrazlozenje()}>
+                    Blokiraj
+                </Button>}
+                {row.Blokiran && <Button 
+                color="primary" 
+                variant="contained"
+                onClick={() => odblokiraj()}>
+                    Odblokiraj
+                </Button>}
+                </Stack>
             </Box>
             }
           </Collapse>
@@ -205,6 +298,7 @@ export default function KorisniciTabela() {
             <TableHead>
             <TableRow>
                 <TableCell />
+                <TableCell/>
                 <TableCell>
                 <IconButton
                     size="small"

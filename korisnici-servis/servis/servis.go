@@ -153,6 +153,30 @@ func OznaciSumnjiv(id uint) error {
 	return err
 }
 
+func Opomeni(id uint) error {
+	korisnik, err := repozitorijum.PreuzmiPoId(id)
+	if err != nil {
+		return err
+	}
+
+	poruka := "Opomena: primetili smo da ste zakasnili sa vraćanjem knjige 3 puta u proteklih 6 meseci. Molimo Vas da vraćate knjige na vreme."
+	mejl := model.Mejl{
+		Poruka:     poruka,
+		MejlAdresa: korisnik.Email,
+	}
+
+	jsonMejl, err := json.Marshal(mejl)
+	if err != nil {
+		return err
+	}
+	_, err = http.Post("http://localhost:8084/opomena", "application/json", bytes.NewReader([]byte(jsonMejl)))
+	if err != nil {
+		return err
+	}
+
+	return err
+}
+
 func ProduziClanarinu(id uint) error {
 	zaIzmenu, err := repozitorijum.PreuzmiPoId(id)
 	if err != nil {
@@ -190,6 +214,34 @@ func Blokiraj(id uint, obrazlozenje string) error {
 		return err
 	}
 	_, err = http.Post("http://localhost:8084/blokiranje", "application/json", bytes.NewReader([]byte(jsonMejl)))
+	if err != nil {
+		return err
+	}
+	return err
+}
+
+func Odblokiraj(id uint) error {
+	zaIzmenu, err := repozitorijum.PreuzmiPoId(id)
+	if err != nil {
+		return err
+	}
+
+	zaIzmenu.Blokiran = false
+	zaIzmenu.Sumnjiv = false
+
+	err = repozitorijum.Izmeni(zaIzmenu)
+
+	poruka := "Vaš nalog je ponovo aktiviran. \n"
+	mejl := model.Mejl{
+		Poruka:     poruka,
+		MejlAdresa: zaIzmenu.Email,
+	}
+
+	jsonMejl, err := json.Marshal(mejl)
+	if err != nil {
+		return err
+	}
+	_, err = http.Post("http://localhost:8084/aktiviranje", "application/json", bytes.NewReader([]byte(jsonMejl)))
 	if err != nil {
 		return err
 	}

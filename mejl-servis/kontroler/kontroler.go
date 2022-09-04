@@ -54,6 +54,20 @@ func OtkrijEndpointe() {
 		return c.SendStatus(fiber.StatusOK)
 	})
 
+	app.Post("/aktiviranje", func(c *fiber.Ctx) error {
+		var payload dto.Mejl
+		err := c.BodyParser(&payload)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+
+		err = servis.PosaljiMejl("Aktiviranje", payload.Poruka, payload.MejlAdresa)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+		return c.SendStatus(fiber.StatusOK)
+	})
+
 	log.Fatal(app.Listen(":8084"))
 
 }
