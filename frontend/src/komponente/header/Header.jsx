@@ -1,4 +1,4 @@
-import { Tabs, Tab, IconButton, Button} from "@mui/material";
+import { Tabs, Tab, IconButton, Button, MenuItem, Menu} from "@mui/material";
 import { Box } from "@mui/system";
 import {React, SyntheticEvent, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom"
@@ -8,6 +8,8 @@ import AuthServis from "../../servisi/AuthServis";
 const Header = ({ulogovan, handleUlogovan}) => {
     const [value, setValue] = useState(0)
     const [korisnik, setKorisnik] = useState(null)
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
 
     useEffect(() => {
       setKorisnik(AuthServis.preuzmiKorisnika())
@@ -19,8 +21,27 @@ const Header = ({ulogovan, handleUlogovan}) => {
       setValue(newValue);
     };
 
+    const handleNalogClick = (event) => {
+      setAnchorEl(event.currentTarget);
+  };
+
+    const handleNalogClose = () => {
+      setAnchorEl(null);
+  };
+
+    const mojNalog = () => {
+      setAnchorEl(null);
+      navigate("/nalog")
+  };
+
+  const promenaLozinke = () => {
+    setAnchorEl(null);
+    navigate("/lozinka")
+  };
+
     const izlogujKorisnika = ()=>{
       AuthServis.ukloniKorisnika()
+      setAnchorEl(null);
       handleUlogovan(false)
       navigate("/")
     }
@@ -60,8 +81,27 @@ const Header = ({ulogovan, handleUlogovan}) => {
         }
          { korisnik != null &&
           <div margin-top = "10px">
-              <IconButton onClick={() => navigate ("/nalog")}> <PersonOutlineIcon/></IconButton>
-              <Button color="secondary" onClick={() => izlogujKorisnika() }>Logout</Button>
+              <IconButton 
+                id='basic-button'
+                onClick={handleNalogClick}
+                aria-controls={open ? 'basic-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? 'true' : undefined}> 
+                <PersonOutlineIcon/>
+              </IconButton>
+              <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleNalogClose}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button',
+              }}
+            >
+              <MenuItem onClick={mojNalog}>Moj nalog</MenuItem>
+              <MenuItem onClick={promenaLozinke}>Promena lozinke</MenuItem>
+              <MenuItem onClick={() => izlogujKorisnika() }>Logout</MenuItem>
+            </Menu>
           </div>
         }
         

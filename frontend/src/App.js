@@ -30,6 +30,8 @@ function App() {
         </Route>
         <Route path="/login" element = {<LogIn handleUlogovan={handleUlogovan}/>} />
         <Route path="/registracija" element = {<KorisnikNalogForma dodavanjeMod={true}/>} />
+        <Route path="/nalog" element = {<KorisnikNalogForma dodavanjeMod={false}/>} />
+        <Route path="/lozinka" element = {<KorisnikNalogForma dodavanjeMod={false}/>} />
 
         <Route path="/uredi-knjige" element = {<KnjigeTabela/>} />
         <Route path="/korisnici" element = {<KorisniciTabela/>} />

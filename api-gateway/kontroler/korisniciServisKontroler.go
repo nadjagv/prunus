@@ -79,11 +79,8 @@ func RutirajKorisniciServis(app *fiber.App) {
 
 	app.Get(prefiks+"/email/:email", func(c *fiber.Ctx) error {
 		authHeaderStr := string(c.Request().Header.Peek("Authorization"))
-		mail, tip, err := util.Autentifikuj(authHeaderStr[7:])
+		mail, _, err := util.Autentifikuj(authHeaderStr[7:])
 		if err != nil {
-			return c.SendStatus(fiber.StatusUnauthorized)
-		}
-		if tip != 1 && tip != 2 {
 			return c.SendStatus(fiber.StatusUnauthorized)
 		}
 		print("Zahtev poslao: " + mail + "\n")

@@ -117,6 +117,7 @@ const KnjigaAddEditDijalog = ({otvoren, zatvoriDijalog, dodavanjeMod, knjiga}) =
           margin="normal"
           label="ISBN"
           placeholder="Unesite ISBN"
+          disabled={!dodavanjeMod}
           fullWidth
           required
           defaultValue={isbn}

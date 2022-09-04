@@ -21,12 +21,13 @@ const KorisnikNalogForma = ({ dodavanjeMod}) => {
     const [ime, setIme] = useState("");
     const [prezime, setPrezime] = useState("");
     const [tip, setTip] = useState(0);
-    const [korisnik, setKorisnik] = useState(0);
+    const [id, setId] = useState(0);
+    const [korisnik, setKorisnik] = useState({});
     const navigation = useNavigate();
   
   
     let dto = {
-      Id: korisnik!=null ? korisnik.Id : 0,
+      Id: id,
       Email: email,
       Lozinka: lozinka,
       Ime: ime,
@@ -37,31 +38,32 @@ const KorisnikNalogForma = ({ dodavanjeMod}) => {
     useEffect(()=>{
       if (!dodavanjeMod){
         preuzmiKorisnika()
-
-        setEmail(korisnik.Email)
-        setIme(korisnik.Ime)
-        setPrezime(korisnik.Prezime)
-        setTip(korisnik.Tip)
       }}, [])
 
-    const preuzmiKorisnika = async () => {
+    const preuzmiKorisnika = () => {
         let ulogovanEmail = AuthServis.preuzmiKorisnika().Email
         axios
         .get(`${Putanje.korisniciGWURL}/email/${ulogovanEmail}`)
         .then((response) => {
-            console.log(response.data);
-            setKorisnik(response.data)
+            console.log(response.data)
+            setId(response.data.Id)
+            setEmail(response.data.Email)
+            setIme(response.data.Ime)
+            setPrezime(response.data.Prezime)
+            setTip(response.data.Tip)
             
         })
         .catch((error) => {
             alert("Neuspešno dobavljanje korisnika.");
         });
+
+        
     }
 
 
 
   function obradiPotvrdu (){
-    
+    console.log(email + "yheheh")
     if (dodavanjeMod){
         setTip(0)
       axios
@@ -98,10 +100,8 @@ const KorisnikNalogForma = ({ dodavanjeMod}) => {
           placeholder="Unesite email"
           fullWidth
           required
-          defaultValue={email}
-          onChange={(e) => {
-              setEmail(e.target.value);
-          }}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           ></TextField>
 
           {dodavanjeMod &&
@@ -122,10 +122,8 @@ const KorisnikNalogForma = ({ dodavanjeMod}) => {
           placeholder="Unesite ime"
           fullWidth
           required
-          defaultValue={ime}
-          onChange={(e) => {
-            setIme(e.target.value);
-          }}
+          value={ime}
+          onChange={(e) => setIme(e.target.value)}
           ></TextField>
           <TextField
           margin="normal"
@@ -133,7 +131,7 @@ const KorisnikNalogForma = ({ dodavanjeMod}) => {
           placeholder="Unesite prezime"
           fullWidth
           required
-          defaultValue={prezime}
+          value={prezime}
           onChange={(e) => {
             setPrezime(e.target.value);
           }}
