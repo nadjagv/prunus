@@ -27,7 +27,7 @@ const KnjigePregled = () =>{
                 <div className = "container">
                     {knjige!=null ? knjige.map((knjiga) => (
                         <div onClick={() => navigate("/knjige/" + knjiga.Id)}>
-                            <KnjigaKartica knjiga={knjiga} key = {knjiga.Isbn}/>
+                            <KnjigaKartica knjiga={knjiga} key = {knjiga.Id}/>
                         </div>
                     )) : 
                         <div className = "empty">

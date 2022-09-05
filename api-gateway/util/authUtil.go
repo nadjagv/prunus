@@ -1,11 +1,10 @@
 package util
 
 import (
+	"api-gateway/dto"
 	"errors"
 
 	"github.com/golang-jwt/jwt"
-
-	dto "api-gateway/dto"
 )
 
 type Kredencijali struct {

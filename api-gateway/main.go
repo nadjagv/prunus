@@ -21,6 +21,7 @@ func main() {
 	kontroler.RutirajKorisniciServis(app)
 	kontroler.RutirajRezIznServis(app)
 	kontroler.RutirajRecenzijeServis(app)
+	kontroler.RutirajIzvestajiServis(app)
 
 	log.Fatal(app.Listen(":8080"))
 }

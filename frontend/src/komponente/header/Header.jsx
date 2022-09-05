@@ -70,10 +70,10 @@ const Header = ({ulogovan, handleUlogovan}) => {
               { korisnik.Tip==1 && <Tab label="Iznajmljivanja"onClick={() => navigate("/iznajmljivanja")}/>}
               { korisnik.Tip==1 && <Tab label="Korisnici"onClick={() => navigate("/korisnici")}/>}
               { korisnik.Tip==1 && <Tab label="Recenzije" onClick={() => navigate("/recenzije")}/>}
-              { korisnik.Tip==1 && <Tab label="Izveštaji"/>}
+              { korisnik.Tip==1 && <Tab label="Izveštaji" onClick={() => navigate("/izvestaji")}/>}
 
               { korisnik.Tip==2 && <Tab label="Korisnici" onClick={() => navigate("/korisnici")}/>}
-              { korisnik.Tip==2 && <Tab label="Izveštaji"/>}
+              { korisnik.Tip==2 && <Tab label="Izveštaji" onClick={() => navigate("/izvestaji")}/>}
               
             </Tabs>
         </div>
