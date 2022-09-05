@@ -67,7 +67,7 @@ func OtkrijEndpointeIzn(app *fiber.App) {
 	})
 
 	app.Post(prefiks+"/", func(c *fiber.Ctx) error {
-		var payload model.IznajmljivanjeDTO
+		var payload model.NovoIznajmljivanjeDTO
 		err := c.BodyParser(&payload)
 		if err != nil {
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())

@@ -11,6 +11,7 @@ import KorisniciTabela from './komponente/korisnici/KorisniciTabela';
 import KorisnikNalogForma from './komponente/korisnici/KorisnikNalogForma';
 import RezervacijeTabela from './komponente/rezervacije/RezervacijeTabela';
 import PretplateTabela from './komponente/pretplate/pretplateTabela';
+import IznajmljivanjaTabela from './komponente/iznajmljivanja/IznajmljivanjaTabela';
 
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
         <Route path="/korisnici" element = {<KorisniciTabela/>} />
         <Route path="/rezervacije" element = {<RezervacijeTabela/>} />
         <Route path="/pretplate" element = {<PretplateTabela/>} />
+        <Route path="/iznajmljivanja" element = {<IznajmljivanjaTabela/>} />
 
         <Route path = "*" element = {<h2>Stranica nije pronađena.</h2>}/>
       </Routes>

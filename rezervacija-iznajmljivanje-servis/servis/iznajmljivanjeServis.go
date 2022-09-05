@@ -1,6 +1,7 @@
 package servis
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -29,19 +30,26 @@ func PreuzmiPoKorisnikuAktivnaIzn(korisnikId uint) []model.Iznajmljivanje {
 	return repozitorijum.PreuzmiAktivnaKorisnikIzn(korisnikId)
 }
 
-func KreirajIzn(dto model.IznajmljivanjeDTO) error {
-	if dto.KnjigaId == 0 || dto.KorisnikId == 0 {
+func KreirajIzn(dto model.NovoIznajmljivanjeDTO) error {
+	fmt.Println(dto)
+	if dto.KnjigaId == 0 || dto.Email == " " {
+
 		return errors.New("nedostaju podaci")
 	}
 	//provera da li korisnik postoji
-	_, err := http.Get(korisniciServisUrl + strconv.FormatUint(uint64(dto.KorisnikId), 10))
+	response, err := http.Get(korisniciServisUrl + "email/" + dto.Email)
 	if err != nil {
 		return errors.New("korisnik ne postoji")
 	}
 
+	var korisnik model.KorisnikDTO
+	defer response.Body.Close()
+
+	json.NewDecoder(response.Body).Decode(&korisnik)
+
 	//upit da se smanji dostupna kolicina
 	postojiRezervacija := false
-	rezervacijeKorisnika := repozitorijum.PreuzmiAktivneKorisnikRez(dto.KorisnikId)
+	rezervacijeKorisnika := repozitorijum.PreuzmiAktivneKorisnikRez(korisnik.Id)
 	for _, r := range rezervacijeKorisnika {
 		if r.KnjigaId == dto.KnjigaId {
 			postojiRezervacija = true
@@ -64,12 +72,15 @@ func KreirajIzn(dto model.IznajmljivanjeDTO) error {
 		}
 	}
 
-	dto.DatumVremeIznajmljivanja = time.Now()
-	dto.RokVracanja = time.Now().AddDate(0, 0, 14)
-	dto.ZakasneloVracanje = false
-	dto.Produzeno = false
-	dto.Aktivno = true
-	err = repozitorijum.KreirajIzn(dto.MapirajNaObjekat())
+	var novi model.Iznajmljivanje
+	novi.KnjigaId = dto.KnjigaId
+	novi.KorisnikId = korisnik.Id
+	novi.DatumVremeIznajmljivanja = time.Now()
+	novi.RokVracanja = time.Now().AddDate(0, 0, 14)
+	novi.ZakasneloVracanje = false
+	novi.Produzeno = false
+	novi.Aktivno = true
+	err = repozitorijum.KreirajIzn(novi)
 
 	return err
 }

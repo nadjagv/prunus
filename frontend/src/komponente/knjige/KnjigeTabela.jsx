@@ -26,15 +26,24 @@ import { Button, Grid } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import useSortableData from '../../util/SortUtil';
+import IznajmljivanjeAddDijalog from '../iznajmljivanja/IznajmljivanjeAddDijalog';
 
 
 function Row({row, ponovoPreuzmi}) {
   const [open, setOpen] = React.useState(false);
 
   const [dijalogOtvoren, setDijalogOtvoren] = useState(false);
+  const [iznajmljivanjeOtvoren, setIznajmljivanjeOtvoren] = useState(false);
 
     function toggleDijalogEdit(promenjeno){
         setDijalogOtvoren(!dijalogOtvoren)
+        if (promenjeno){
+            ponovoPreuzmi()
+        }
+    }
+
+    function toggleDijalogIznajmi(promenjeno){
+        setIznajmljivanjeOtvoren(!iznajmljivanjeOtvoren)
         if (promenjeno){
             ponovoPreuzmi()
         }
@@ -98,6 +107,23 @@ function Row({row, ponovoPreuzmi}) {
           >
             <DeleteIcon></DeleteIcon>
           </IconButton>
+        </TableCell>
+        <TableCell/>
+        <TableCell>
+            <IznajmljivanjeAddDijalog
+                otvoren={iznajmljivanjeOtvoren}
+                zatvoriDijalog={toggleDijalogIznajmi}
+
+                knjigaId = {row.Id}
+                />
+          <Button
+            disabled= {row.TrenutnoDostupno<=0}
+            color="primary" 
+            variant="contained"
+            onClick={() => toggleDijalogIznajmi()}
+          >
+            Iznajmi
+          </Button>
         </TableCell>
       </TableRow>
       <TableRow>
@@ -255,6 +281,9 @@ export default function KnjigeTabela() {
                 </TableCell>
                 <TableCell align="center" colSpan={3}>
                 <b>Uredi</b>
+              </TableCell>
+              <TableCell align="center" colSpan={2}>
+                <b>Iznajmi</b>
               </TableCell>
             </TableRow>
             </TableHead>

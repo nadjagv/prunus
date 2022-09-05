@@ -14,6 +14,11 @@ type IznajmljivanjeDTO struct {
 	Aktivno                  bool
 }
 
+type NovoIznajmljivanjeDTO struct {
+	Email    string
+	KnjigaId uint
+}
+
 func (iznajmljivanje *Iznajmljivanje) MapirajNaDTO() IznajmljivanjeDTO {
 	return IznajmljivanjeDTO{
 		Id:                       iznajmljivanje.ID,

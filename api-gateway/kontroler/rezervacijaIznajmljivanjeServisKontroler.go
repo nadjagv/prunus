@@ -193,7 +193,6 @@ func RutirajRezIznServis(app *fiber.App) {
 	})
 
 	app.Post(prefiksRez, func(c *fiber.Ctx) error {
-		fmt.Println("ejjejefgws")
 		authHeaderStr := string(c.Request().Header.Peek("Authorization"))
 		email, tip, err := util.Autentifikuj(authHeaderStr[7:])
 		if err != nil {
@@ -282,7 +281,36 @@ func RutirajRezIznServis(app *fiber.App) {
 			fmt.Println(err)
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}
-		return c.Status(response.StatusCode).JSON(body)
+
+		var rezultat []dto.IznajmljivanjeNazivKnjigeDTO
+		var knjiga dto.KnjigaSlikaDTO
+		for _, rez := range body {
+			responseKnjige, err2 := http.Get(knjigeServisUrl + strconv.FormatUint(uint64(rez.KnjigaId), 10))
+			if err2 != nil {
+				return c.Status(fiber.ErrBadRequest.Code).JSON(err2)
+			}
+
+			err = util.GetJson(responseKnjige, &knjiga)
+			if err != nil {
+				return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+			}
+
+			rezDto := dto.IznajmljivanjeNazivKnjigeDTO{
+				Id:                       rez.Id,
+				KorisnikId:               rez.KorisnikId,
+				KnjigaId:                 rez.KnjigaId,
+				KnjigaNaziv:              knjiga.Naziv,
+				Aktivno:                  rez.Aktivno,
+				DatumVremeIznajmljivanja: rez.DatumVremeIznajmljivanja,
+				RokVracanja:              rez.RokVracanja,
+				DatumVremeVracanja:       rez.DatumVremeVracanja,
+				ZakasneloVracanje:        rez.ZakasneloVracanje,
+				Produzeno:                rez.Produzeno,
+			}
+			rezultat = append(rezultat, rezDto)
+		}
+
+		return c.Status(response.StatusCode).JSON(rezultat)
 	})
 
 	app.Get(prefiksIzn+"/:id", func(c *fiber.Ctx) error {
@@ -320,7 +348,7 @@ func RutirajRezIznServis(app *fiber.App) {
 		}
 		print("Zahtev poslao: " + email + "\n")
 		idStr := c.Params("id")
-		response, err := http.Get(iznajmljivanjeServisUrl + "aktivna-korisnik/:" + idStr)
+		response, err := http.Get(iznajmljivanjeServisUrl + "aktivna-korisnik/" + idStr)
 		if err != nil {
 			fmt.Println(err)
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
@@ -332,7 +360,35 @@ func RutirajRezIznServis(app *fiber.App) {
 			fmt.Println(err)
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}
-		return c.Status(response.StatusCode).JSON(body)
+		var rezultat []dto.IznajmljivanjeNazivKnjigeDTO
+		var knjiga dto.KnjigaSlikaDTO
+		for _, rez := range body {
+			responseKnjige, err2 := http.Get(knjigeServisUrl + strconv.FormatUint(uint64(rez.KnjigaId), 10))
+			if err2 != nil {
+				return c.Status(fiber.ErrBadRequest.Code).JSON(err2)
+			}
+
+			err = util.GetJson(responseKnjige, &knjiga)
+			if err != nil {
+				return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+			}
+
+			rezDto := dto.IznajmljivanjeNazivKnjigeDTO{
+				Id:                       rez.Id,
+				KorisnikId:               rez.KorisnikId,
+				KnjigaId:                 rez.KnjigaId,
+				KnjigaNaziv:              knjiga.Naziv,
+				Aktivno:                  rez.Aktivno,
+				DatumVremeIznajmljivanja: rez.DatumVremeIznajmljivanja,
+				RokVracanja:              rez.RokVracanja,
+				DatumVremeVracanja:       rez.DatumVremeVracanja,
+				ZakasneloVracanje:        rez.ZakasneloVracanje,
+				Produzeno:                rez.Produzeno,
+			}
+			rezultat = append(rezultat, rezDto)
+		}
+
+		return c.Status(response.StatusCode).JSON(rezultat)
 	})
 
 	app.Post(prefiksIzn, func(c *fiber.Ctx) error {
