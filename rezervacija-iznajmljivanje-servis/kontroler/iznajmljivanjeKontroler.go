@@ -1,7 +1,9 @@
 package kontroler
 
 import (
+	"fmt"
 	"strconv"
+	"time"
 
 	model "rezervacija-iznajmljivanje-servis/model"
 	servis "rezervacija-iznajmljivanje-servis/servis"
@@ -32,6 +34,37 @@ func OtkrijEndpointeIzn(app *fiber.App) {
 			return fiber.NewError(fiber.StatusNotFound, err.Error())
 		}
 		return c.Status(fiber.StatusOK).JSON(rez.MapirajNaDTO())
+	})
+
+	app.Get(prefiks+"/izmedju-datuma/sve", func(c *fiber.Ctx) error {
+		fmt.Println("jeje")
+		pocetak := c.Query("pocetak")
+		pocetakUint, err := strconv.ParseUint(pocetak, 10, 64)
+		if err != nil {
+			fmt.Println(err)
+			return fiber.NewError(fiber.StatusNotFound, err.Error())
+		}
+
+		kraj := c.Query("kraj")
+		krajUint, err2 := strconv.ParseUint(kraj, 10, 64)
+		if err != nil {
+			fmt.Println(err2)
+			return fiber.NewError(fiber.StatusNotFound, err.Error())
+		}
+
+		fmt.Println(pocetak)
+		fmt.Println(kraj)
+		d1 := time.Unix(0, int64(pocetakUint)*int64(time.Millisecond))
+		d2 := time.Unix(0, int64(krajUint)*int64(time.Millisecond))
+		fmt.Println(d1)
+		fmt.Println(d2)
+		rez := servis.PreuzmiIzmedjuDatumaIzn(d1, d2)
+		var rezultat []model.IznajmljivanjeDTO
+		for _, r := range rez {
+			rezultat = append(rezultat, r.MapirajNaDTO())
+			fmt.Println("tu")
+		}
+		return c.Status(fiber.StatusOK).JSON(rezultat)
 	})
 
 	app.Get(prefiks+"/knjiga-korisnik/:knjigaId/:korisnikId", func(c *fiber.Ctx) error {

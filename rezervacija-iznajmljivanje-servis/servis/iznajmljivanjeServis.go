@@ -30,6 +30,10 @@ func PreuzmiPoKorisnikuAktivnaIzn(korisnikId uint) []model.Iznajmljivanje {
 	return repozitorijum.PreuzmiAktivnaKorisnikIzn(korisnikId)
 }
 
+func PreuzmiIzmedjuDatumaIzn(d1 time.Time, d2 time.Time) []model.Iznajmljivanje {
+	return repozitorijum.PreuzmiIzmedjuDatumaIzn(d1, d2)
+}
+
 func KreirajIzn(dto model.NovoIznajmljivanjeDTO) error {
 	fmt.Println(dto)
 	if dto.KnjigaId == 0 || dto.Email == " " {

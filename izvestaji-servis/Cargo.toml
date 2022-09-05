@@ -1,0 +1,26 @@
+[package]
+name = "izvestaji-servis"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+base64 = "0.13.0"
+dotenv = "0.15.0"
+serde = "1.0.143"
+serde_derive = "1.0.143"
+serde_json = "1.0.83"
+json = "0.12.4"
+http = "0.2"
+
+chrono = "0.4"
+
+reqwest = { version = "0.10", features = ["blocking", "json"] }
+tokio = { version = "1", features = ["full"] }
+
+rocket = "0.4.4"
+rocket_codegen = "0.4.4"
+rocket_contrib = "0.4.4"
+rocket_cors = "0.5.2"
+postgres = "0.19.3"

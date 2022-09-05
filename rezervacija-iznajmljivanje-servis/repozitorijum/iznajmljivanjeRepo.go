@@ -66,6 +66,14 @@ func PreuzmiIzmedjuDatumaZaKorisnikaIzn(korisnikId uint, d1 time.Time, d2 time.T
 	return iznajmljivanja
 }
 
+func PreuzmiIzmedjuDatumaIzn(d1 time.Time, d2 time.Time) []model.Iznajmljivanje {
+	var iznajmljivanja []model.Iznajmljivanje
+
+	util.Database.Where("datum_vreme_iznajmljivanja BETWEEN ? AND ?", d1, d2).Find(&iznajmljivanja)
+
+	return iznajmljivanja
+}
+
 func PreuzmiZakasneleIzmedjuDatumaZaKorisnikaIzn(korisnikId uint, d1 time.Time, d2 time.Time) []model.Iznajmljivanje {
 	var iznajmljivanja []model.Iznajmljivanje
 
