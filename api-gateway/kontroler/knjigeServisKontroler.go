@@ -216,13 +216,38 @@ func RutirajKnjigeServis(app *fiber.App) {
 		return c.Status(response.StatusCode).JSON(body)
 	})
 
+	app.Get(prefiks+"/pretplata/knjiga-korisnik/:knjigaId/:korisnikId", func(c *fiber.Ctx) error {
+		authHeaderStr := string(c.Request().Header.Peek("Authorization"))
+		email, tip, err := util.Autentifikuj(authHeaderStr[7:])
+		if err != nil {
+			return c.SendStatus(fiber.StatusUnauthorized)
+		}
+		if tip != 0 {
+			return c.SendStatus(fiber.StatusUnauthorized)
+		}
+		print("Zahtev poslao: " + email + "\n")
+		knjigaId := c.Params("knjigaId")
+		korisnikId := c.Params("korisnikId")
+		response, err := http.Get(knjigeServisUrl + "pretplata/knjiga-korisnik/" + knjigaId + "/" + korisnikId)
+		if err != nil {
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+
+		var body dto.PretplataDTO
+		err = util.GetJson(response, &body)
+		if err != nil {
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+		return c.Status(response.StatusCode).JSON(body)
+	})
+
 	app.Post(prefiks+"/pretplata", func(c *fiber.Ctx) error {
 		authHeaderStr := string(c.Request().Header.Peek("Authorization"))
 		email, tip, err := util.Autentifikuj(authHeaderStr[7:])
 		if err != nil {
 			return c.SendStatus(fiber.StatusUnauthorized)
 		}
-		if tip != 1 && tip != 2 {
+		if tip != 0 {
 			return c.SendStatus(fiber.StatusUnauthorized)
 		}
 		print("Zahtev poslao: " + email + "\n")

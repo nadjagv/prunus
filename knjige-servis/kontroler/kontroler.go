@@ -173,15 +173,37 @@ func OtkrijEndpointe() {
 		return c.Status(fiber.StatusOK).JSON(pretplate)
 	})
 
+	app.Get("/pretplata/knjiga-korisnik/:knjigaId/:korisnikId", func(c *fiber.Ctx) error {
+		idStr := c.Params("korisnikId")
+		korisnikId, err := strconv.ParseUint(idStr, 10, 64)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+
+		idStr = c.Params("knjigaId")
+		knjigaId, err2 := strconv.ParseUint(idStr, 10, 64)
+		if err2 != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err2.Error())
+		}
+
+		pretplata := servis.PreuzmiPoKnjiziKorisniku(uint(knjigaId), uint(korisnikId))
+
+		return c.Status(fiber.StatusOK).JSON(pretplata)
+	})
+
 	app.Post("/pretplata", func(c *fiber.Ctx) error {
 		var payload model.PretplataDTO
 		err := c.BodyParser(&payload)
 		if err != nil {
+			fmt.Println("err")
+			fmt.Println(err)
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 
 		err = servis.KreirajPretplatu(payload.MapirajNaObjekat())
 		if err != nil {
+			fmt.Println("hehy")
+			fmt.Println(err)
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 		return c.SendStatus(fiber.StatusOK)

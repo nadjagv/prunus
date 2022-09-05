@@ -39,6 +39,13 @@ func PreuzmiPoKnjizi(knjigaId uint) []model.Pretplata {
 	return pretplate
 }
 
+func PreuzmiPoKnjiziKorisniku(knjigaId uint, korisnikId uint) model.Pretplata {
+	var pretplata model.Pretplata
+
+	util.Database.Where("knjiga_id = ? AND korisnik_id=?", knjigaId, korisnikId).First(&pretplata)
+	return pretplata
+}
+
 func KreirajPretplatu(pretplata model.Pretplata) error {
 	result := util.Database.Create(&pretplata)
 

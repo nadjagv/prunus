@@ -49,6 +49,14 @@ func PreuzmiAktivneKorisnikRez(id uint) []model.Rezervacija {
 	return rezervacije
 }
 
+func PreuzmiAktivnuKorisnikKnjigaRez(id uint, knjigaId uint) model.Rezervacija {
+	var rezervacija model.Rezervacija
+
+	util.Database.Where("korisnik_id = ? AND aktivno = ? AND knjiga_id=?", id, true, knjigaId).First(&rezervacija)
+
+	return rezervacija
+}
+
 func KreirajRez(rezervacija model.Rezervacija) error {
 	result := util.Database.Create(&rezervacija)
 

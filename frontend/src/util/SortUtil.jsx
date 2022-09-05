@@ -4,6 +4,10 @@ const useSortableData = (items, config = null) => {
     const [sortConfig, setSortConfig] = React.useState(config);
   
     const sortedItems = React.useMemo(() => {
+        if (items==null){
+            items=[];
+        }
+
       let sortableItems = [...items];
       if (sortConfig !== null) {
         sortableItems.sort((a, b) => {

@@ -19,6 +19,13 @@ func PreuzmiSveRez() []model.Rezervacija {
 func PreuzmiPoIdRez(id uint) (model.Rezervacija, error) {
 	return repozitorijum.PreuzmiPoIdRez(id)
 }
+func PreuzmiAktivnuKorisnikKnjigaRez(id uint, knjigaId uint) model.Rezervacija {
+	return repozitorijum.PreuzmiAktivnuKorisnikKnjigaRez(id, knjigaId)
+}
+
+func PreuzmiAktivneKorisnikRez(id uint) []model.Rezervacija {
+	return repozitorijum.PreuzmiAktivneKorisnikRez(id)
+}
 
 func KreirajRez(dto model.RezervacijaDTO) error {
 	if dto.KnjigaId == 0 || dto.KorisnikId == 0 {

@@ -1,21 +1,36 @@
 import { TryRounded } from "@mui/icons-material";
-import { Box, Card, CardContent, Grid, List, Rating } from "@mui/material";
+import { Box, Button, Card, CardContent, Grid, List, Rating } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Zanr from "../../enumeracije/Zanr"
 import Putanje from "../../konstante/Putanje";
+import AuthServis from "../../servisi/AuthServis";
+import axios from "axios";
 
 const Knjiga = () =>{
     const { id } = useParams()
 
     const [knjiga, setKnjiga] = useState({ProsecnaOcena:5})
     const [komentari, setKomentari] = useState([])
+    const [korisnik, setKorisnik] = useState({})
+    const [pretplataPostoji, setPretplataPostoji] = useState(false)
+    const [rezervacijaPostoji, setRezervacijaPostoji] = useState(false)
+
+    useEffect(()=>{
+        setKorisnik(AuthServis.preuzmiKorisnika())     
+    }, [])
 
     useEffect(()=>{
         preuzmiPoId()
         preuzmiOdobreneKomentare()
+        if (korisnik != null){
+            preuzmiPretplacen()
+            preuzmiRezervaciju()
+        }
         
-    }, [])
+        
+        
+    }, [korisnik])
 
     const preuzmiPoId = async () => {
         const response = await fetch (`${Putanje.knjigeGWURL}/${id}`)
@@ -29,6 +44,73 @@ const Knjiga = () =>{
         const data = await response.json();
         console.log(data)
         setKomentari(data)
+    }
+
+    const preuzmiPretplacen = ()=>{
+        
+        if (korisnik.Id != undefined){
+            axios
+          .get(`${Putanje.knjigeGWURL}/pretplata/knjiga-korisnik/${id}/${korisnik.Id}`)
+          .then((response) => {
+            console.log(response.data)
+            setPretplataPostoji(response.data.Id!=0)
+          })
+          .catch((error) => {
+            console.log("Pretplata ne postoji.")
+          });
+        }
+        
+    }
+
+    const preuzmiRezervaciju = ()=>{
+        if (korisnik.Id != undefined){
+            axios
+          .get(`${Putanje.rezervacijeGWURL}/knjiga-korisnik/${id}/${korisnik.Id}`)
+          .then((response) => {
+            console.log(response.data)
+            setRezervacijaPostoji(response.data.Id!=0)
+          })
+          .catch((error) => {
+            console.log("Rezervacija ne postoji.")
+          });
+        }
+        
+    }
+
+    const pretplatiSe=() =>{
+        let pretplataDto = {
+            KorisnikId: parseInt(korisnik.Id),
+            KorisnikEmail: korisnik.Email,
+            KnjigaId: parseInt(id),
+            KnjigaNaziv: knjiga.Naziv,
+        }
+        axios
+          .post(`${Putanje.knjigeGWURL}/pretplata`, pretplataDto)
+          .then((response) => {
+            console.log(response.data)
+            setPretplataPostoji(true)
+            alert("Uspešna pretplata.")
+          })
+          .catch((error) => {
+            alert("Neuspešna pretplata.")
+          });
+    }
+
+
+    const rezervisi=() =>{
+        let rezervacijaDto = {
+            KorisnikId: parseInt(korisnik.Id),
+            KnjigaId: parseInt(id),
+        }
+        axios
+          .post(`${Putanje.rezervacijeGWURL}`, rezervacijaDto)
+          .then((response) => {
+            setRezervacijaPostoji(true)
+            alert("Uspešna rezervacija.")
+          })
+          .catch((error) => {
+            alert("Neuspešna pretplata.")
+          });
     }
 
 
@@ -59,7 +141,55 @@ const Knjiga = () =>{
                         <p> Broj strana: {knjiga.BrojStrana}</p>
                         <p> Godina nastanka: {knjiga.GodinaNastanka}</p>
 
+                        <br/>
 
+                        {korisnik!=null && korisnik.Tip==0 && 
+                        <div>
+                            {knjiga.TrenutnoDostupno<=0 && !pretplataPostoji &&
+                            <div>
+                                
+                                <p>Knjiga trenutno nije dostupna. Moguća je praćenje dostupnosti klikom na dugme PRETPLATI SE.</p>
+                                <br/>
+                                <Button 
+                                    color="primary" 
+                                    variant="contained"
+                                    onClick={() => pretplatiSe()}>
+                                        Pretplati se
+                                </Button>
+                            </div>
+                            }
+                            {knjiga.TrenutnoDostupno<=0 && pretplataPostoji &&
+                            <div>
+                                
+                                <p><b>Pretplaćeni ste</b> na ovu knjigu. Otkazivanje pretplate možete izvršiti na tabu PRETPLATE.</p>
+                                <br/>
+                            </div>
+                            }
+                            { knjiga.TrenutnoDostupno>0 && !rezervacijaPostoji &&
+                            <div>
+                                <p>Knjiga je dostupna.</p>
+                                <br/>
+                                <Button 
+                                    color="primary" 
+                                    variant="contained"
+                                    onClick={() => rezervisi()}>
+                                        Rezerviši
+                                </Button>
+                            </div>
+                            }
+                            { knjiga.TrenutnoDostupno>0 && rezervacijaPostoji &&
+                            <div>
+                                <p>Knjiga je dostupna.</p>
+                                <br/>
+                                <div>
+                                <p><b>Rezervisali ste</b> ovu knjigu. Detalje pogledajte na tabu REZERVACIJA.</p>
+                                <br/>
+                            </div>
+                            </div>
+                            }
+                        
+                        </div>
+                        }
                     </CardContent>
                 </Card>
             </Grid>

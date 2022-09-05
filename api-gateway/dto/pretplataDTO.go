@@ -6,4 +6,5 @@ type PretplataDTO struct {
 	KorisnikId    uint
 	KorisnikEmail string
 	KnjigaId      uint
+	KnjigaNaziv   string
 }

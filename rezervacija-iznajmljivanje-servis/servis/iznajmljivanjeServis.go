@@ -21,6 +21,10 @@ func PreuzmiPoIdIzn(id uint) (model.Iznajmljivanje, error) {
 	return repozitorijum.PreuzmiPoIdIzn(id)
 }
 
+func PreuzmiAktivnuKorisnikKnjigaIzn(id uint, knjigaId uint) model.Iznajmljivanje {
+	return repozitorijum.PreuzmiAktivnuKorisnikKnjigaIzn(id, knjigaId)
+}
+
 func PreuzmiPoKorisnikuAktivnaIzn(korisnikId uint) []model.Iznajmljivanje {
 	return repozitorijum.PreuzmiAktivnaKorisnikIzn(korisnikId)
 }

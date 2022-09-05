@@ -34,6 +34,23 @@ func OtkrijEndpointeIzn(app *fiber.App) {
 		return c.Status(fiber.StatusOK).JSON(rez.MapirajNaDTO())
 	})
 
+	app.Get(prefiks+"/knjiga-korisnik/:knjigaId/:korisnikId", func(c *fiber.Ctx) error {
+		idStr := c.Params("korisnikId")
+		korisnikId, err := strconv.ParseUint(idStr, 10, 64)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+
+		idStr = c.Params("knjigaId")
+		knjigaId, err2 := strconv.ParseUint(idStr, 10, 64)
+		if err2 != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err2.Error())
+		}
+
+		rez := servis.PreuzmiAktivnuKorisnikKnjigaIzn(uint(korisnikId), uint(knjigaId))
+		return c.Status(fiber.StatusOK).JSON(rez.MapirajNaDTO())
+	})
+
 	app.Get(prefiks+"/aktivna-korisnik/:id", func(c *fiber.Ctx) error {
 		idStr := c.Params("id")
 		id, err := strconv.ParseUint(idStr, 10, 64)

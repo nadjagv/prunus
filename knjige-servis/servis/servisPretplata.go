@@ -24,12 +24,16 @@ func PreuzmiPoKnjizi(knjigaId uint) []model.Pretplata {
 	return repozitorijum.PreuzmiPoKnjizi(knjigaId)
 }
 
+func PreuzmiPoKnjiziKorisniku(knjigaId uint, korisnikId uint) model.Pretplata {
+	return repozitorijum.PreuzmiPoKnjiziKorisniku(knjigaId, korisnikId)
+}
+
 func KreirajPretplatu(pretplata model.Pretplata) error {
 	if pretplata.KnjigaId == 0 || pretplata.KorisnikId == 0 || pretplata.KorisnikEmail == "" {
 		return errors.New("nedostaju podaci")
 	}
 
-	_, err := repozitorijum.PreuzmiPoId(pretplata.KnjigaId)
+	knjiga, err := repozitorijum.PreuzmiPoId(pretplata.KnjigaId)
 	if err != nil {
 		return err
 	}
@@ -45,6 +49,8 @@ func KreirajPretplatu(pretplata model.Pretplata) error {
 			return errors.New("korisnik je vec pretplacen na ovu knjigu")
 		}
 	}
+
+	pretplata.KnjigaNaziv = knjiga.Naziv
 
 	err = repozitorijum.KreirajPretplatu(pretplata)
 

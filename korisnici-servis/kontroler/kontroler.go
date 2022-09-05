@@ -57,6 +57,7 @@ func OtkrijEndpointe() {
 		c.Cookie(cookie)
 
 		korisnikTokenInfo := &model.KorisnikTokenInfo{
+			Id:    korisnik.ID,
 			Email: korisnik.Email,
 			Tip:   korisnik.Tip,
 			Token: tokenStr,

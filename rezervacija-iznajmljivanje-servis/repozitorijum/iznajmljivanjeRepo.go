@@ -50,6 +50,14 @@ func PreuzmiAktivnaKorisnikIzn(id uint) []model.Iznajmljivanje {
 	return iznajmljivanja
 }
 
+func PreuzmiAktivnuKorisnikKnjigaIzn(id uint, knjigaId uint) model.Iznajmljivanje {
+	var iznajmljivanje model.Iznajmljivanje
+
+	util.Database.Where("korisnik_id = ? AND aktivno = ? AND knjiga_id=?", id, true, knjigaId).First(&iznajmljivanje)
+
+	return iznajmljivanje
+}
+
 func PreuzmiIzmedjuDatumaZaKorisnikaIzn(korisnikId uint, d1 time.Time, d2 time.Time) []model.Iznajmljivanje {
 	var iznajmljivanja []model.Iznajmljivanje
 

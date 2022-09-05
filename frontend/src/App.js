@@ -9,6 +9,8 @@ import { useState } from 'react';
 import KnjigeTabela from './komponente/knjige/KnjigeTabela';
 import KorisniciTabela from './komponente/korisnici/KorisniciTabela';
 import KorisnikNalogForma from './komponente/korisnici/KorisnikNalogForma';
+import RezervacijeTabela from './komponente/rezervacije/RezervacijeTabela';
+import PretplateTabela from './komponente/pretplate/pretplateTabela';
 
 
 function App() {
@@ -35,6 +37,8 @@ function App() {
 
         <Route path="/uredi-knjige" element = {<KnjigeTabela/>} />
         <Route path="/korisnici" element = {<KorisniciTabela/>} />
+        <Route path="/rezervacije" element = {<RezervacijeTabela/>} />
+        <Route path="/pretplate" element = {<PretplateTabela/>} />
 
         <Route path = "*" element = {<h2>Stranica nije pronađena.</h2>}/>
       </Routes>

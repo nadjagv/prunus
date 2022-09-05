@@ -1,6 +1,7 @@
 package kontroler
 
 import (
+	"fmt"
 	"strconv"
 
 	model "rezervacija-iznajmljivanje-servis/model"
@@ -15,6 +16,7 @@ func OtkrijEndpointeRez(app *fiber.App) {
 	servis.ProveravajIstekRezervacija()
 
 	app.Get(prefiks+"/", func(c *fiber.Ctx) error {
+
 		rez := servis.PreuzmiSveRez()
 		var rezultat []model.RezervacijaDTO
 		for _, r := range rez {
@@ -36,15 +38,49 @@ func OtkrijEndpointeRez(app *fiber.App) {
 		return c.Status(fiber.StatusOK).JSON(rez.MapirajNaDTO())
 	})
 
+	app.Get(prefiks+"/korisnik/:id", func(c *fiber.Ctx) error {
+		idStr := c.Params("id")
+		id, err := strconv.ParseUint(idStr, 10, 64)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+		rez := servis.PreuzmiAktivneKorisnikRez(uint(id))
+		var rezultat []model.RezervacijaDTO
+		for _, r := range rez {
+			rezultat = append(rezultat, r.MapirajNaDTO())
+		}
+		return c.Status(fiber.StatusOK).JSON(rezultat)
+	})
+
+	app.Get(prefiks+"/knjiga-korisnik/:knjigaId/:korisnikId", func(c *fiber.Ctx) error {
+		idStr := c.Params("korisnikId")
+		korisnikId, err := strconv.ParseUint(idStr, 10, 64)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+
+		idStr = c.Params("knjigaId")
+		knjigaId, err2 := strconv.ParseUint(idStr, 10, 64)
+		if err2 != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err2.Error())
+		}
+
+		rez := servis.PreuzmiAktivnuKorisnikKnjigaRez(uint(korisnikId), uint(knjigaId))
+		return c.Status(fiber.StatusOK).JSON(rez.MapirajNaDTO())
+	})
+
 	app.Post(prefiks+"/", func(c *fiber.Ctx) error {
+		fmt.Println("alsf;l")
 		var payload model.RezervacijaDTO
 		err := c.BodyParser(&payload)
 		if err != nil {
+			fmt.Println(err)
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 
 		err = servis.KreirajRez(payload)
 		if err != nil {
+			fmt.Println(err)
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 		return c.SendStatus(fiber.StatusOK)
