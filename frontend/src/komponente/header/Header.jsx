@@ -63,14 +63,13 @@ const Header = ({ulogovan, handleUlogovan}) => {
               
               { korisnik.Tip==0 && <Tab label="Rezervacije" onClick={() => navigate("/rezervacije")}/>}
               { korisnik.Tip==0 && <Tab label="Iznajmljivanja"onClick={() => navigate("/iznajmljivanja")}/>}
-              { korisnik.Tip==0 && <Tab label="Recenzije"/>}
               { korisnik.Tip==0 && <Tab label="Pretplate" onClick={() => navigate("/pretplate")}/>}
               { korisnik.Tip==0 && <Tab label="Preporuka"/>}
 
               { korisnik.Tip==1 && <Tab label="Uredi Knjige" onClick={() => navigate("/uredi-knjige")}/>}
               { korisnik.Tip==1 && <Tab label="Iznajmljivanja"onClick={() => navigate("/iznajmljivanja")}/>}
               { korisnik.Tip==1 && <Tab label="Korisnici"onClick={() => navigate("/korisnici")}/>}
-              { korisnik.Tip==1 && <Tab label="Recenzije"/>}
+              { korisnik.Tip==1 && <Tab label="Recenzije" onClick={() => navigate("/recenzije")}/>}
               { korisnik.Tip==1 && <Tab label="Izveštaji"/>}
 
               { korisnik.Tip==2 && <Tab label="Korisnici" onClick={() => navigate("/korisnici")}/>}

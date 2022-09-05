@@ -17,3 +17,15 @@ type RecenzijaDTO struct {
 	Obrisano    bool
 	Status      string
 }
+
+type RecenzijaNazivEmailDTO struct {
+	Id            uint
+	KorisnikId    uint
+	KnjigaId      uint
+	Ocena         uint
+	Komentar      string
+	Obrisano      bool
+	Status        string
+	KorisnikEmail string
+	KnjigaNaziv   string
+}

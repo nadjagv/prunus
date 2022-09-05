@@ -1,16 +1,9 @@
 package kontroler
 
 import (
-	// "bytes"
-	// "fmt"
-
-	// "net/http"
-
-	// dto "api-gateway/dto"
-	// util "api-gateway/util"
-
 	"api-gateway/dto"
 	"api-gateway/util"
+	"bytes"
 	"fmt"
 	"net/http"
 
@@ -89,6 +82,7 @@ func RutirajRecenzijeServis(app *fiber.App) {
 			fmt.Println(err)
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}
+
 		return c.Status(response.StatusCode).JSON(body)
 	})
 
@@ -105,7 +99,82 @@ func RutirajRecenzijeServis(app *fiber.App) {
 			fmt.Println(err)
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}
-		return c.Status(response.StatusCode).JSON(body)
+		var rezultat []dto.RecenzijaNazivEmailDTO
+		for _, rec := range body {
+			rneDTO, err2 := util.MapirajNaRecenzijeNazivEmailDTO(rec)
+			if err2 != nil {
+				fmt.Println(err)
+				return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+			}
+			rezultat = append(rezultat, rneDTO)
+		}
+
+		return c.Status(response.StatusCode).JSON(rezultat)
+	})
+
+	app.Put(prefiks+"/odobri/:id", func(c *fiber.Ctx) error {
+		authHeaderStr := string(c.Request().Header.Peek("Authorization"))
+		email, tip, err := util.Autentifikuj(authHeaderStr[7:])
+		if err != nil {
+			return c.SendStatus(fiber.StatusUnauthorized)
+		}
+		if tip != 1 {
+			return c.SendStatus(fiber.StatusUnauthorized)
+		}
+		print("Zahtev poslao: " + email + "\n")
+		idStr := c.Params("id")
+		request, err := http.NewRequest(http.MethodPut, recenzijeServisUrl+"odobri/"+idStr, bytes.NewBuffer(c.Body()))
+		if err != nil {
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+		request.Header.Set("Content-Type", "application/json; charset=utf-8")
+		client := &http.Client{}
+		response, err := client.Do(request)
+		if err != nil {
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+		return c.SendStatus(response.StatusCode)
+	})
+
+	app.Put(prefiks+"/odbij/:id", func(c *fiber.Ctx) error {
+		authHeaderStr := string(c.Request().Header.Peek("Authorization"))
+		email, tip, err := util.Autentifikuj(authHeaderStr[7:])
+		if err != nil {
+			return c.SendStatus(fiber.StatusUnauthorized)
+		}
+		if tip != 1 {
+			return c.SendStatus(fiber.StatusUnauthorized)
+		}
+		print("Zahtev poslao: " + email + "\n")
+		idStr := c.Params("id")
+		request, err := http.NewRequest(http.MethodPut, recenzijeServisUrl+"odbij/"+idStr, bytes.NewBuffer(c.Body()))
+		if err != nil {
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+		request.Header.Set("Content-Type", "application/json; charset=utf-8")
+		client := &http.Client{}
+		response, err := client.Do(request)
+		if err != nil {
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+		return c.SendStatus(response.StatusCode)
+	})
+
+	app.Post(prefiks, func(c *fiber.Ctx) error {
+		authHeaderStr := string(c.Request().Header.Peek("Authorization"))
+		email, tip, err := util.Autentifikuj(authHeaderStr[7:])
+		if err != nil {
+			return c.SendStatus(fiber.StatusUnauthorized)
+		}
+		if tip != 0 {
+			return c.SendStatus(fiber.StatusUnauthorized)
+		}
+		print("Zahtev poslao: " + email + "\n")
+		response, err := http.Post(recenzijeServisUrl, "application/json", bytes.NewReader(c.Body()))
+		if err != nil {
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+		return c.SendStatus(response.StatusCode)
 	})
 
 }

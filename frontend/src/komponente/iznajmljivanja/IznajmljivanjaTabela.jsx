@@ -16,9 +16,16 @@ import SwapVertIcon from '@mui/icons-material/SwapVert';
 import useSortableData from '../../util/SortUtil';
 import { format } from 'date-fns-tz';
 import AuthServis from '../../servisi/AuthServis';
+import RecenzijaAddDijalog from '../recenzije/RecenzijaAddDijalog';
 
 
 function Row({row, ponovoPreuzmi, clan}) {
+    const [dijalogOtvoren, setDijalogOtvoren] = useState(false);
+
+    function toggleDijalog(){
+        setDijalogOtvoren(!dijalogOtvoren)
+    }
+
     function vrati(){
         axios
           .post(`${Putanje.iznajmljivanjaGWURL}/vrati`, row)
@@ -96,10 +103,15 @@ function Row({row, ponovoPreuzmi, clan}) {
 
         {clan &&
         <TableCell>
+            <RecenzijaAddDijalog
+               otvoren={dijalogOtvoren}
+               zatvoriDijalog={toggleDijalog}
+               knjigaId = {row.KnjigaId}
+               />
           <Button
             color="primary" 
             variant="contained"
-            onClick={() => recenziraj()}
+            onClick={() => toggleDijalog()}
           >
             Recenziraj
           </Button>
@@ -253,7 +265,7 @@ export default function IznajmljivanjaTabela() {
             {items!= null &&
             <TableBody>
             {items.map((row) => (
-                <Row key={row.Id} row={row} ponovoPreuzmi={preuzmiSve}/>
+                <Row key={row.Id} row={row} ponovoPreuzmi={preuzmiSve} clan={clan}/>
             ))}
 
             </TableBody>
