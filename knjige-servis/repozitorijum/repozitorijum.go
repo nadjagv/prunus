@@ -37,6 +37,12 @@ func PreuzmiPoIsbn(isbn string) (model.Knjiga, error) {
 	return knjiga, nil
 }
 
+func PreuzmiPoZanru(zanr model.ZanrEnum) []model.Knjiga {
+	var knjige []model.Knjiga
+	util.Database.Where("zanr = ?", zanr).Find(&knjige)
+	return knjige
+}
+
 func Kreiraj(knjiga model.Knjiga) error {
 	result := util.Database.Create(&knjiga)
 

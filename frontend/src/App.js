@@ -45,6 +45,7 @@ function App() {
         <Route path="/iznajmljivanja" element = {<IznajmljivanjaTabela/>} />
         <Route path="/recenzije" element = {<RecenzijeTabela/>} />
         <Route path="/izvestaji" element = {<IzvestajPregled/>} />
+        <Route path="/preporuka" element = {<KnjigePregled preporuka={true}/>} />
 
         <Route path = "*" element = {<h2>Stranica nije pronađena.</h2>}/>
       </Routes>

@@ -210,6 +210,32 @@ func RutirajKnjigeServis(app *fiber.App) {
 		return c.Status(response.StatusCode).JSON(body)
 	})
 
+	app.Get(prefiks+"/preporuci/:id", func(c *fiber.Ctx) error {
+		authHeaderStr := string(c.Request().Header.Peek("Authorization"))
+		email, tip, err := util.Autentifikuj(authHeaderStr[7:])
+		if err != nil {
+			return c.SendStatus(fiber.StatusUnauthorized)
+		}
+		if tip != 0 {
+			return c.SendStatus(fiber.StatusUnauthorized)
+		}
+		print("Zahtev poslao: " + email + "\n")
+		id := c.Params("id")
+		response, err := http.Get(knjigeServisUrl + "preporuci/" + id)
+		if err != nil {
+			fmt.Println(err)
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+
+		var body []dto.KnjigaSlikaDTO
+		err = util.GetJson(response, &body)
+		if err != nil {
+			fmt.Println(err)
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+		return c.Status(response.StatusCode).JSON(body)
+	})
+
 	//pretplata
 
 	app.Get(prefiks+"/pretplata/:id", func(c *fiber.Ctx) error {

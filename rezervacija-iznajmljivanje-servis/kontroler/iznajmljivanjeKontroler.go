@@ -99,6 +99,21 @@ func OtkrijEndpointeIzn(app *fiber.App) {
 		return c.Status(fiber.StatusOK).JSON(rezultat)
 	})
 
+	app.Get(prefiks+"/poslednjih-pet-korisnik/:id", func(c *fiber.Ctx) error {
+		idStr := c.Params("id")
+		id, err := strconv.ParseUint(idStr, 10, 64)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+
+		rez := servis.PreuzmiPoslednjih5KorisnikIzn(uint(id))
+		var rezultat []model.IznajmljivanjeDTO
+		for _, r := range rez {
+			rezultat = append(rezultat, r.MapirajNaDTO())
+		}
+		return c.Status(fiber.StatusOK).JSON(rezultat)
+	})
+
 	app.Post(prefiks+"/", func(c *fiber.Ctx) error {
 		var payload model.NovoIznajmljivanjeDTO
 		err := c.BodyParser(&payload)

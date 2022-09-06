@@ -233,6 +233,23 @@ func OtkrijEndpointe() {
 		return c.Status(fiber.StatusOK).JSON(rezultat)
 	})
 
+	app.Get("/preporuci/:id", func(c *fiber.Ctx) error {
+		idStr := c.Params("id")
+		id, err := strconv.ParseUint(idStr, 10, 64)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+		knjige, err2 := servis.Preporuci(uint(id))
+		if err2 != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err2.Error())
+		}
+		var rezultat []model.KnjigaSlikaDTO
+		for _, knjiga := range knjige {
+			rezultat = append(rezultat, knjiga.MapirajNaSlikaDTO())
+		}
+		return c.Status(fiber.StatusOK).JSON(rezultat)
+	})
+
 	log.Fatal(app.Listen(":8081"))
 
 }

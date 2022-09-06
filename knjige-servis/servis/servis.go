@@ -7,10 +7,13 @@ import (
 	"fmt"
 	model "knjige-servis/model"
 	repozitorijum "knjige-servis/repozitorijum"
+	"math/rand"
 	"net/http"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func PreuzmiSve() []model.Knjiga {
@@ -187,4 +190,99 @@ func Pretrazi(param string) []model.Knjiga {
 	}
 
 	return rezultat
+}
+
+func Preporuci(korisnikId uint) ([]model.Knjiga, error) {
+	var iznajmljivanjeServisUrl = "http://localhost:8083/iznajmljivanja/"
+	var rezultat []model.Knjiga
+
+	response, err := http.Get(iznajmljivanjeServisUrl + "poslednjih-pet-korisnik/" + strconv.FormatUint(uint64(korisnikId), 10))
+	if err != nil {
+		fmt.Println(err)
+		return rezultat, err
+	}
+	var iznajmljivanja []model.IznajmljivanjeDTO
+	json.NewDecoder(response.Body).Decode(&iznajmljivanja)
+
+	mapa := make(map[model.ZanrEnum]uint)
+	if len(iznajmljivanja) == 0 {
+		sveKnjige := repozitorijum.PreuzmiSve()
+		rand.Seed(time.Now().UnixNano())
+		randomIndex := rand.Intn(len(sveKnjige))
+
+		rezultat = append(rezultat, sveKnjige[randomIndex])
+
+		return rezultat, nil
+	}
+
+	poslednje := iznajmljivanja[len(iznajmljivanja)-1]
+	poslednjeKnjiga, err2 := repozitorijum.PreuzmiPoId(poslednje.KnjigaId)
+	if err2 != nil {
+		fmt.Println(err)
+		return rezultat, err2
+	}
+	mapa[poslednjeKnjiga.Zanr] = 1
+
+	iznajmljeneKnjigeIdMapa := make(map[uint]uint)
+	for _, izn := range iznajmljivanja {
+		iznajmljeneKnjigeIdMapa[izn.KnjigaId] = 1
+		knjiga, err3 := repozitorijum.PreuzmiPoId(izn.KnjigaId)
+		if err3 != nil {
+			fmt.Println(err)
+			return rezultat, err3
+		}
+		_, postoji := mapa[knjiga.Zanr]
+		if postoji {
+			mapa[knjiga.Zanr] += 1
+		} else {
+			mapa[knjiga.Zanr] = 1
+		}
+	}
+
+	kljucevi := make([]model.ZanrEnum, 0, len(mapa))
+
+	for kljuc := range mapa {
+		kljucevi = append(kljucevi, kljuc)
+	}
+
+	sort.SliceStable(kljucevi, func(i, j int) bool {
+		return mapa[kljucevi[i]] > mapa[kljucevi[j]]
+	})
+
+	if mapa[kljucevi[0]] == 1 {
+		zanrPreporuka := poslednjeKnjiga.Zanr
+		knjigePoZanru := repozitorijum.PreuzmiPoZanru(zanrPreporuka)
+		for _, knjiga := range knjigePoZanru {
+			_, postoji := iznajmljeneKnjigeIdMapa[knjiga.ID]
+			if !postoji {
+				rezultat = append(rezultat, knjiga)
+			}
+		}
+
+		if len(rezultat) > 0 {
+			return rezultat, nil
+		}
+	}
+
+	for _, zanr := range kljucevi {
+		knjigePoZanru := repozitorijum.PreuzmiPoZanru(zanr)
+		for _, knjiga := range knjigePoZanru {
+			_, postoji := iznajmljeneKnjigeIdMapa[knjiga.ID]
+			if !postoji {
+				rezultat = append(rezultat, knjiga)
+			}
+		}
+
+		if len(rezultat) > 0 {
+			return rezultat, nil
+		}
+	}
+
+	sveKnjige := repozitorijum.PreuzmiSve()
+	rand.Seed(time.Now().UnixNano())
+	randomIndex := rand.Intn(len(sveKnjige))
+
+	rezultat = append(rezultat, sveKnjige[randomIndex])
+
+	return rezultat, nil
 }

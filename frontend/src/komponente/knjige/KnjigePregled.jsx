@@ -4,8 +4,10 @@ import {useNavigate} from "react-router-dom"
 import Putanje from "../../konstante/Putanje";
 import { Button, IconButton, MenuItem, Select, Stack, TextField } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
+import AuthServis from "../../servisi/AuthServis";
+import axios from "axios";
 
-const KnjigePregled = () =>{
+const KnjigePregled = ({preporuka}) =>{
     const [knjige, setKnjige] = useState([])
     const [param, setParam] = useState("")
     const [pretraga, setPretraga] = useState(false)
@@ -14,8 +16,10 @@ const KnjigePregled = () =>{
     const navigate = useNavigate()
 
     useEffect(()=>{
-        if(!pretraga){
+        if(!pretraga && !preporuka){
             preuzmiSve()
+        }else if (preporuka){
+            preporuci()
         }
     }, [pretraga])
 
@@ -34,6 +38,19 @@ const KnjigePregled = () =>{
         setKnjige(data)
     }
 
+    const preporuci = async () => {
+        axios
+          .get(`${Putanje.knjigeGWURL}/preporuci/${AuthServis.preuzmiKorisnika().Id}`)
+          .then((response) => {
+            console.log(response.data);
+            setKnjige(response.data)
+            
+          })
+          .catch((error) => {
+            alert("Neuspešno dobavljanje preporuke.");
+          });
+    }
+
     const ponisti=()=>{
         setParam("")
         setPretraga(false)
@@ -45,7 +62,7 @@ const KnjigePregled = () =>{
 
                 
 
-            
+            {!preporuka &&
             <div className = "container">
                 <Stack spacing={2} direction="row">
                     <TextField
@@ -76,7 +93,8 @@ const KnjigePregled = () =>{
                         </Button>
                     </Stack>
                 </div>
-
+                }
+                 {!preporuka &&
                 <div className="container">
                 <Stack spacing={2} direction="row">
                     <Select
@@ -106,6 +124,7 @@ const KnjigePregled = () =>{
                     </Select>
                     </Stack>
                 </div>
+                }
                 <div className = "container">
                     {knjige!=null ? knjige.map((knjiga) => (
                         <div onClick={() => navigate("/knjige/" + knjiga.Id)}>

@@ -30,6 +30,14 @@ func PreuzmiPoKorisnikuAktivnaIzn(korisnikId uint) []model.Iznajmljivanje {
 	return repozitorijum.PreuzmiAktivnaKorisnikIzn(korisnikId)
 }
 
+func PreuzmiPoslednjih5KorisnikIzn(korisnikId uint) []model.Iznajmljivanje {
+	sve := repozitorijum.PreuzmiSveKorisnikIzn(korisnikId)
+	if len(sve) > 5 {
+		return sve[len(sve)-5:]
+	}
+	return sve
+}
+
 func PreuzmiIzmedjuDatumaIzn(d1 time.Time, d2 time.Time) []model.Iznajmljivanje {
 	return repozitorijum.PreuzmiIzmedjuDatumaIzn(d1, d2)
 }
