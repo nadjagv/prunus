@@ -9,6 +9,7 @@ import (
 	repozitorijum "korisnici-servis/repozitorijum"
 	util "korisnici-servis/util"
 	"net/http"
+	"strings"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -246,4 +247,17 @@ func Odblokiraj(id uint) error {
 		return err
 	}
 	return err
+}
+
+func Pretrazi(param string) []model.Korisnik {
+	param = strings.ToLower(param)
+	svi := repozitorijum.PreuzmiSve()
+	var rezultat []model.Korisnik
+	for _, korisnik := range svi {
+		if strings.Contains(strings.ToLower(korisnik.Email), param) || strings.Contains(strings.ToLower(korisnik.Ime), param) || strings.Contains(strings.ToLower(korisnik.Prezime), param) {
+			rezultat = append(rezultat, korisnik)
+		}
+	}
+
+	return rezultat
 }

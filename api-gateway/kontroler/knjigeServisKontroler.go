@@ -192,6 +192,26 @@ func RutirajKnjigeServis(app *fiber.App) {
 		return c.SendStatus(response.StatusCode)
 	})
 
+	app.Get(prefiks+"/pretrazi/:param", func(c *fiber.Ctx) error {
+
+		param := c.Params("param")
+		response, err := http.Get(knjigeServisUrl + "pretrazi/" + param)
+		if err != nil {
+			fmt.Println(err)
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+
+		var body []dto.KnjigaSlikaDTO
+		err = util.GetJson(response, &body)
+		if err != nil {
+			fmt.Println(err)
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+		return c.Status(response.StatusCode).JSON(body)
+	})
+
+	//pretplata
+
 	app.Get(prefiks+"/pretplata/:id", func(c *fiber.Ctx) error {
 		authHeaderStr := string(c.Request().Header.Peek("Authorization"))
 		email, tip, err := util.Autentifikuj(authHeaderStr[7:])

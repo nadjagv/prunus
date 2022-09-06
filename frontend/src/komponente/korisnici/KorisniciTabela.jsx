@@ -18,7 +18,7 @@ import Putanje from '../../konstante/Putanje';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from "axios";
-import { Button, Grid, Stack } from '@mui/material';
+import { Button, Grid, Stack, TextField } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import useSortableData from '../../util/SortUtil';
@@ -30,6 +30,7 @@ import KorisnikAddEditDijalog from './KorisnikAddEditDijalog';
 import BlockIcon from '@mui/icons-material/Block';
 import { Warning } from '@mui/icons-material';
 import ObrazlozenjeBlokiranjaDijalog from './ObrazlozenjeBlokiranjaDijalog';
+import SearchIcon from '@mui/icons-material/Search';
 
 
 function Row({row, ponovoPreuzmi, admin}) {
@@ -230,6 +231,8 @@ export default function KorisniciTabela() {
     const [korisnici, setKorisnici] = useState([])
     const [admin, setAdmin] = useState(false)
     const [dijalogOtvoren, setDijalogOtvoren] = useState(false);
+    const [param, setParam] = useState("")
+    const [pretraga, setPretraga] = useState(false)
 
     const { items, requestSort, sortConfig } = useSortableData(korisnici);
     const getClassNamesFor = (name) => {
@@ -246,12 +249,13 @@ export default function KorisniciTabela() {
         }
     }
 
-    useEffect(()=>{
-        preuzmiSve()
 
-        setAdmin(AuthServis.preuzmiKorisnika().Tip == 2)
-        
-    }, [])
+    useEffect(()=>{
+      if(!pretraga){
+          preuzmiSve()
+      }
+      setAdmin(AuthServis.preuzmiKorisnika().Tip == 2)
+    }, [pretraga])
 
     const preuzmiSve = async () => {
         axios
@@ -265,6 +269,26 @@ export default function KorisniciTabela() {
             alert("Neuspešno dobavljanje korisnika.");
           });
     }
+
+    const pretrazi = async () => {
+      setPretraga(true)
+      axios
+        .get(`${Putanje.korisniciGWURL}/pretrazi/${param}`)
+        .then((response) => {
+          console.log(response.data);
+          setKorisnici(response.data)
+          
+        })
+        .catch((error) => {
+          alert("Neuspešno dobavljanje korisnika.");
+        });
+  }
+
+  const ponisti=()=>{
+    setParam("")
+    setPretraga(false)
+    
+}
 
     
 
@@ -292,6 +316,35 @@ export default function KorisniciTabela() {
                 Dodaj
             </Button>
             }
+
+<Stack spacing={2} direction="row" sx={{margin:1}}>
+              <TextField
+              margin="normal"
+              label="Pretraga"
+              placeholder="Pretraži"
+              fullWidth
+              value={param}
+              onChange={(e) => {
+                  setParam(e.target.value);
+              }}
+              ></TextField>
+
+              <IconButton
+                  aria-label="expand row"
+                  size="large"
+                  onClick={() => pretrazi()}
+                  
+              >
+                  <SearchIcon></SearchIcon>
+              </IconButton>
+
+              <Button 
+                  color="primary" 
+                  variant="contained"
+                  onClick={() => ponisti()}>
+                      Poništi pretragu
+                  </Button>
+              </Stack>
     
     <TableContainer component={Paper} sx={{margin: 10, width: 0.8}}>
         <Table aria-label="collapsible table">

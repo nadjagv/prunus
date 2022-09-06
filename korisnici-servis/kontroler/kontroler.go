@@ -222,6 +222,12 @@ func OtkrijEndpointe() {
 		return c.SendStatus(fiber.StatusOK)
 	})
 
+	app.Get("/pretrazi/:param", func(c *fiber.Ctx) error {
+		param := c.Params("param")
+		korisnici := servis.Pretrazi(param)
+		return c.Status(fiber.StatusOK).JSON(korisnici)
+	})
+
 	log.Fatal(app.Listen(":8082"))
 
 }

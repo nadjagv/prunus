@@ -174,3 +174,17 @@ func Oceni(id uint, ocena uint) error {
 
 	return err
 }
+
+func Pretrazi(param string) []model.Knjiga {
+
+	param = strings.ToLower(param)
+	sve := repozitorijum.PreuzmiSve()
+	var rezultat []model.Knjiga
+	for _, knjiga := range sve {
+		if strings.Contains(strings.ToLower(knjiga.Naziv), param) || strings.Contains(strings.ToLower(knjiga.ImeAutora), param) || strings.Contains(strings.ToLower(knjiga.PrezimeAutora), param) || strings.Contains(strings.ToLower(knjiga.Isbn), param) {
+			rezultat = append(rezultat, knjiga)
+		}
+	}
+
+	return rezultat
+}

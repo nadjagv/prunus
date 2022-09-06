@@ -284,4 +284,30 @@ func RutirajKorisniciServis(app *fiber.App) {
 		return c.SendStatus(response.StatusCode)
 	})
 
+	app.Get(prefiks+"/pretrazi/:param", func(c *fiber.Ctx) error {
+		authHeaderStr := string(c.Request().Header.Peek("Authorization"))
+		email, tip, err := util.Autentifikuj(authHeaderStr[7:])
+		if err != nil {
+			return c.SendStatus(fiber.StatusUnauthorized)
+		}
+		if tip != 2 && tip != 1 {
+			return c.SendStatus(fiber.StatusUnauthorized)
+		}
+		print("Zahtev poslao: " + email + "\n")
+		param := c.Params("param")
+		response, err := http.Get(korisniciServisUrl + "pretrazi/" + param)
+		if err != nil {
+			fmt.Println(err)
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+
+		var body []dto.KorisnikDTO
+		err = util.GetJson(response, &body)
+		if err != nil {
+			fmt.Println(err)
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+		return c.Status(response.StatusCode).JSON(body)
+	})
+
 }

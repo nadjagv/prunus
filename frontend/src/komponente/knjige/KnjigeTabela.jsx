@@ -22,11 +22,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import KnjigaAddEditDijalog from './KnjigaAddEditDijalog';
 import axios from "axios";
-import { Button, Grid } from '@mui/material';
+import { Button, Grid, Stack, TextField } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import useSortableData from '../../util/SortUtil';
 import IznajmljivanjeAddDijalog from '../iznajmljivanja/IznajmljivanjeAddDijalog';
+import SearchIcon from '@mui/icons-material/Search';
 
 
 function Row({row, ponovoPreuzmi}) {
@@ -168,6 +169,8 @@ function Row({row, ponovoPreuzmi}) {
 export default function KnjigeTabela() {
     const [knjige, setKnjige] = useState([])
     const [dijalogOtvoren, setDijalogOtvoren] = useState(false);
+    const [param, setParam] = useState("")
+    const [pretraga, setPretraga] = useState(false)
 
     const { items, requestSort, sortConfig } = useSortableData(knjige);
     const getClassNamesFor = (name) => {
@@ -185,9 +188,10 @@ export default function KnjigeTabela() {
     }
 
     useEffect(()=>{
-        preuzmiSve()
-        
-    }, [])
+      if(!pretraga){
+          preuzmiSve()
+      }
+  }, [pretraga])
 
     const preuzmiSve = async () => {
         const response = await fetch (`${Putanje.knjigeGWURL}`)
@@ -195,6 +199,20 @@ export default function KnjigeTabela() {
         console.log(data)
         setKnjige(data)
     }
+
+    const pretrazi = async () => {
+      setPretraga(true)
+      const response = await fetch (`${Putanje.knjigeGWURL}/pretrazi/${param}`)
+      const data = await response.json();
+      console.log(data)
+      setKnjige(data)
+  }
+
+  const ponisti=()=>{
+      setParam("")
+      setPretraga(false)
+      
+  }
 
     
 
@@ -219,6 +237,35 @@ export default function KnjigeTabela() {
                 onClick={()=>toggleDijalog()}>
                 Dodaj
             </Button>
+
+            <Stack spacing={2} direction="row">
+              <TextField
+              margin="normal"
+              label="Pretraga"
+              placeholder="Pretraži"
+              fullWidth
+              value={param}
+              onChange={(e) => {
+                  setParam(e.target.value);
+              }}
+              ></TextField>
+
+              <IconButton
+                  aria-label="expand row"
+                  size="large"
+                  onClick={() => pretrazi()}
+                  
+              >
+                  <SearchIcon></SearchIcon>
+              </IconButton>
+
+              <Button 
+                  color="primary" 
+                  variant="contained"
+                  onClick={() => ponisti()}>
+                      Poništi pretragu
+                  </Button>
+              </Stack>
     
     <TableContainer component={Paper} sx={{margin: 10, width: 0.8}}>
         <Table aria-label="collapsible table">

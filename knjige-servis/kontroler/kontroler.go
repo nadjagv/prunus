@@ -223,6 +223,16 @@ func OtkrijEndpointe() {
 		return c.SendStatus(fiber.StatusOK)
 	})
 
+	app.Get("/pretrazi/:param", func(c *fiber.Ctx) error {
+		param := c.Params("param")
+		knjige := servis.Pretrazi(param)
+		var rezultat []model.KnjigaSlikaDTO
+		for _, knjiga := range knjige {
+			rezultat = append(rezultat, knjiga.MapirajNaSlikaDTO())
+		}
+		return c.Status(fiber.StatusOK).JSON(rezultat)
+	})
+
 	log.Fatal(app.Listen(":8081"))
 
 }
