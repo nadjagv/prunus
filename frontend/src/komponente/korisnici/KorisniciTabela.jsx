@@ -18,7 +18,7 @@ import Putanje from '../../konstante/Putanje';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from "axios";
-import { Button, Grid, Stack, TextField } from '@mui/material';
+import { Button, Grid, MenuItem, Select, Stack, TextField } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import useSortableData from '../../util/SortUtil';
@@ -33,7 +33,7 @@ import ObrazlozenjeBlokiranjaDijalog from './ObrazlozenjeBlokiranjaDijalog';
 import SearchIcon from '@mui/icons-material/Search';
 
 
-function Row({row, ponovoPreuzmi, admin}) {
+function Row({row, ponovoPreuzmi, admin, filter}) {
   const [open, setOpen] = React.useState(false);
 
   const [dijalogOtvoren, setDijalogOtvoren] = useState(false);
@@ -115,7 +115,7 @@ function Row({row, ponovoPreuzmi, admin}) {
   return (
     <React.Fragment>
         
-
+        {((filter==3) || (filter!=3 && filter==row.Tip)) &&
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
         <TableCell>
           <IconButton
@@ -173,6 +173,8 @@ function Row({row, ponovoPreuzmi, admin}) {
         </TableCell>
         }
       </TableRow>
+      }
+      {((filter==3) || (filter!=3 && filter==row.Tip)) &&
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
@@ -221,6 +223,7 @@ function Row({row, ponovoPreuzmi, admin}) {
           </Collapse>
         </TableCell>
       </TableRow>
+      }
     </React.Fragment>
   );
 }
@@ -233,6 +236,7 @@ export default function KorisniciTabela() {
     const [dijalogOtvoren, setDijalogOtvoren] = useState(false);
     const [param, setParam] = useState("")
     const [pretraga, setPretraga] = useState(false)
+    const [filter, setFilter] = useState(3)
 
     const { items, requestSort, sortConfig } = useSortableData(korisnici);
     const getClassNamesFor = (name) => {
@@ -345,6 +349,20 @@ export default function KorisniciTabela() {
                       Poništi pretragu
                   </Button>
               </Stack>
+              <Stack spacing={2} direction="row" sx={{margin:1}}>
+              <Select
+              id="simple-select"
+              value={filter}
+              label="Tip korisnika"
+              fullWidth
+              onChange={(e) => {setFilter(e.target.value);}}
+            >
+              <MenuItem value={3}>Sve</MenuItem>
+              <MenuItem value={0}>Član</MenuItem>
+              <MenuItem value={1}>Bibliotekar</MenuItem>
+              <MenuItem value={2}>Admin</MenuItem>
+            </Select>
+            </Stack>
     
     <TableContainer component={Paper} sx={{margin: 10, width: 0.8}}>
         <Table aria-label="collapsible table">
@@ -416,7 +434,7 @@ export default function KorisniciTabela() {
             {items!= null &&
             <TableBody>
             {items.map((row) => (
-                <Row key={row.Id} row={row} ponovoPreuzmi={preuzmiSve} admin={admin}/>
+                <Row key={row.Id} row={row} ponovoPreuzmi={preuzmiSve} admin={admin} filter={filter}/>
             ))}
 
             </TableBody>

@@ -22,7 +22,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import KnjigaAddEditDijalog from './KnjigaAddEditDijalog';
 import axios from "axios";
-import { Button, Grid, Stack, TextField } from '@mui/material';
+import { Button, Grid, MenuItem, Select, Stack, TextField } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import useSortableData from '../../util/SortUtil';
@@ -30,7 +30,7 @@ import IznajmljivanjeAddDijalog from '../iznajmljivanja/IznajmljivanjeAddDijalog
 import SearchIcon from '@mui/icons-material/Search';
 
 
-function Row({row, ponovoPreuzmi}) {
+function Row({row, ponovoPreuzmi, filter}) {
   const [open, setOpen] = React.useState(false);
 
   const [dijalogOtvoren, setDijalogOtvoren] = useState(false);
@@ -66,7 +66,7 @@ function Row({row, ponovoPreuzmi}) {
   return (
     <React.Fragment>
         
-
+      {((filter==14) || (filter!=14 && filter==row.Zanr)) &&
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
         <TableCell>
           <IconButton
@@ -127,6 +127,8 @@ function Row({row, ponovoPreuzmi}) {
           </Button>
         </TableCell>
       </TableRow>
+      }
+      {((filter==14) || (filter!=14 && filter==row.Zanr)) &&
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
@@ -160,6 +162,7 @@ function Row({row, ponovoPreuzmi}) {
           </Collapse>
         </TableCell>
       </TableRow>
+    }
     </React.Fragment>
   );
 }
@@ -171,6 +174,7 @@ export default function KnjigeTabela() {
     const [dijalogOtvoren, setDijalogOtvoren] = useState(false);
     const [param, setParam] = useState("")
     const [pretraga, setPretraga] = useState(false)
+    const [filter, setFilter] = useState(14)
 
     const { items, requestSort, sortConfig } = useSortableData(knjige);
     const getClassNamesFor = (name) => {
@@ -266,6 +270,34 @@ export default function KnjigeTabela() {
                       Poništi pretragu
                   </Button>
               </Stack>
+
+
+              <Stack spacing={2} direction="row">
+                    <Select
+                        id="simple-select"
+                        value={filter}
+                        label="Žanr"
+                        fullWidth
+                        onChange={(e) => {setFilter(e.target.value);}}
+                        >
+                        <MenuItem value={14}>Sve</MenuItem>
+                        <MenuItem value={0}>Naučna fantastika</MenuItem>
+                        <MenuItem value={1}>Ljubavni</MenuItem>
+                        <MenuItem value={2}>Klasik</MenuItem>
+                        <MenuItem value={3}>Horor</MenuItem>
+                        <MenuItem value={4}>Triler</MenuItem>
+                        <MenuItem value={5}>Avantura</MenuItem>
+                        <MenuItem value={6}>Biografija</MenuItem>
+                        <MenuItem value={7}>Popularna psihologija</MenuItem>
+                        <MenuItem value={8}>Opšta interesovanja</MenuItem>
+                        <MenuItem value={9}>Stručna literatura</MenuItem>
+                        <MenuItem value={10}>Strani jezik</MenuItem>
+                        <MenuItem value={11}>Poezija</MenuItem>
+                        <MenuItem value={12}>Dečije</MenuItem>
+                        <MenuItem value={13}>Ostalo</MenuItem>
+                        
+                    </Select>
+                    </Stack>
     
     <TableContainer component={Paper} sx={{margin: 10, width: 0.8}}>
         <Table aria-label="collapsible table">
@@ -337,7 +369,7 @@ export default function KnjigeTabela() {
             {items!= null &&
             <TableBody>
             {items.map((row) => (
-                <Row key={row.Id} row={row} ponovoPreuzmi={preuzmiSve} />
+                <Row key={row.Id} row={row} ponovoPreuzmi={preuzmiSve} filter={filter}/>
             ))}
 
             </TableBody>
