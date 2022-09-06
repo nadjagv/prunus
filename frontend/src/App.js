@@ -14,6 +14,7 @@ import PretplateTabela from './komponente/pretplate/pretplateTabela';
 import IznajmljivanjaTabela from './komponente/iznajmljivanja/IznajmljivanjaTabela';
 import RecenzijeTabela from './komponente/recenzije/RecenzijeTabela';
 import IzvestajPregled from './komponente/izvestaji/IzvestajPregled';
+import PromenaLozinke from './komponente/korisnici/PromenaLozinke';
 
 
 function App() {
@@ -36,7 +37,7 @@ function App() {
         <Route path="/login" element = {<LogIn handleUlogovan={handleUlogovan}/>} />
         <Route path="/registracija" element = {<KorisnikNalogForma dodavanjeMod={true}/>} />
         <Route path="/nalog" element = {<KorisnikNalogForma dodavanjeMod={false}/>} />
-        <Route path="/lozinka" element = {<KorisnikNalogForma dodavanjeMod={false}/>} />
+        <Route path="/lozinka" element = {<PromenaLozinke/>} />
 
         <Route path="/uredi-knjige" element = {<KnjigeTabela/>} />
         <Route path="/korisnici" element = {<KorisniciTabela/>} />
