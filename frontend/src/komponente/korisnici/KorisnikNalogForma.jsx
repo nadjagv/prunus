@@ -74,7 +74,7 @@ const KorisnikNalogForma = ({ dodavanjeMod}) => {
             navigation("/login")
           })
           .catch((error) => {
-            alert("Nije uspešno. Pokušajte ponovo.");
+            alert(error.response.data)
           });
     }else{
       axios
@@ -84,7 +84,7 @@ const KorisnikNalogForma = ({ dodavanjeMod}) => {
             alert("Zahtev uspešno obrađen!");
           })
           .catch((error) => {
-            alert("Nije uspešno. Pokušajte ponovo.");
+            alert(error.response.data)
           });
     }
   }

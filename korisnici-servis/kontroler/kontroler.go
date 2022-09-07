@@ -101,7 +101,7 @@ func OtkrijEndpointe() {
 
 		err = servis.Kreiraj(payload)
 		if err != nil {
-			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+			return c.Status(fiber.StatusBadRequest).JSON(err.Error())
 		}
 		return c.SendStatus(fiber.StatusOK)
 	})

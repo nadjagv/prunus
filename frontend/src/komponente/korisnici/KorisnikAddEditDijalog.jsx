@@ -57,7 +57,8 @@ const KorisnikAddEditDijalog = ({otvoren, zatvoriDijalog, dodavanjeMod, korisnik
             
           })
           .catch((error) => {
-            alert("Nije uspešno. Pokušajte ponovo.");
+            console.log(error.response.data)
+            alert(error.response.data)
           });
     }else{
       axios
@@ -68,7 +69,7 @@ const KorisnikAddEditDijalog = ({otvoren, zatvoriDijalog, dodavanjeMod, korisnik
             alert("Zahtev uspešno obrađen!");
           })
           .catch((error) => {
-            alert("Nije uspešno. Pokušajte ponovo.");
+            alert(error.response.data)
           });
     }
   }

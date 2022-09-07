@@ -48,6 +48,10 @@ impl RecenzijaServis{
       }
   }
 
+  pub fn postoji_recenzija_korisnik_knjiga(&mut self, korisnik_id: i32, knjiga_id: i32) -> bool{
+    self.repo.postoji_recenzija_korisnik_knjiga(korisnik_id, knjiga_id)
+}
+
     pub fn kreiraj(&mut self, recenzija: Recenzija) -> Result<String, String> {
         match self.repo.kreiraj(recenzija) {
           Some(true) => Ok("Uspeh".to_string()),

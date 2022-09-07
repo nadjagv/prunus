@@ -5,7 +5,9 @@ import (
 	"api-gateway/util"
 	"bytes"
 	"fmt"
+	"io"
 	"net/http"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -175,6 +177,40 @@ func RutirajRecenzijeServis(app *fiber.App) {
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}
 		return c.SendStatus(response.StatusCode)
+	})
+
+	app.Get(prefiks+"/postoji/:korisnikId/:knjigaId", func(c *fiber.Ctx) error {
+		authHeaderStr := string(c.Request().Header.Peek("Authorization"))
+		email, tip, err := util.Autentifikuj(authHeaderStr[7:])
+		if err != nil {
+			return c.SendStatus(fiber.StatusUnauthorized)
+		}
+		if tip != 0 {
+			return c.SendStatus(fiber.StatusUnauthorized)
+		}
+		print("Zahtev poslao: " + email + "\n")
+
+		korisnikId := c.Params("korisnikId")
+		knjigaId := c.Params("knjigaId")
+
+		response, err := http.Get(recenzijeServisUrl + "postoji/" + korisnikId + "/" + knjigaId)
+		if err != nil {
+			fmt.Println(err)
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+
+		bodyBytes, err2 := io.ReadAll(response.Body)
+		if err2 != nil {
+			fmt.Println(err2)
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err2)
+		}
+		postoji, err3 := strconv.ParseBool(string(bodyBytes))
+		if err3 != nil {
+			fmt.Println(err3)
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err3)
+		}
+
+		return c.Status(response.StatusCode).JSON(postoji)
 	})
 
 }

@@ -21,6 +21,25 @@ import RecenzijaAddDijalog from '../recenzije/RecenzijaAddDijalog';
 
 function Row({row, ponovoPreuzmi, clan}) {
     const [dijalogOtvoren, setDijalogOtvoren] = useState(false);
+    const [postojiRecenzija, setPostojiRecenzija] = useState(false);
+
+    useEffect(()=>{
+      if(clan){
+        proveriRecenzijaPostoji()
+      }
+      
+    }, [])
+
+    function proveriRecenzijaPostoji(){
+      axios
+          .get(`${Putanje.recenzijeGWURL}/postoji/${row.KorisnikId}/${row.KnjigaId}`)
+          .then((response) => {
+            setPostojiRecenzija(response.data);
+          })
+          .catch((error) => {
+            alert("Nije uspešno. Pokušajte ponovo.");
+          });
+    }
 
     function toggleDijalog(){
         setDijalogOtvoren(!dijalogOtvoren)
@@ -32,7 +51,6 @@ function Row({row, ponovoPreuzmi, clan}) {
           .then((response) => {
             console.log(response.data);
             ponovoPreuzmi()
-            alert("Vraćanje uspešno!");
           })
           .catch((error) => {
             alert("Nije uspešno. Pokušajte ponovo.");
@@ -45,15 +63,10 @@ function Row({row, ponovoPreuzmi, clan}) {
           .then((response) => {
             console.log(response.data);
             ponovoPreuzmi()
-            alert("Otkazivanje uspešno!");
           })
           .catch((error) => {
             alert("Nije uspešno. Pokušajte ponovo.");
           });
-    }
-
-    function recenziraj(){
-        alert("recenziranje")
     }
 
     var rokDate = new Date(row.RokVracanja);
@@ -109,6 +122,7 @@ function Row({row, ponovoPreuzmi, clan}) {
                knjigaId = {row.KnjigaId}
                />
           <Button
+            disabled = {postojiRecenzija}
             color="primary" 
             variant="contained"
             onClick={() => toggleDijalog()}

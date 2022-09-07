@@ -128,6 +128,23 @@ impl Repozitorijum {
     Some(recenzije)
 }
 
+
+    pub fn postoji_recenzija_korisnik_knjiga(&mut self, korisnik_id: i32, knjiga_id: i32) -> bool{
+      let redovi = self.client.query("SELECT id, komentar, ocena, korisnik_id, knjiga_id, obrisano, status FROM recenzije WHERE korisnik_id = $1 AND knjiga_id=$2", &[&korisnik_id, &knjiga_id]);
+    
+        if redovi.is_err() {
+            eprintln!("{}", redovi.err().unwrap());
+          return false;
+        }
+
+        if redovi.unwrap().is_empty() {
+            println!("tu");
+            return false;
+        }
+
+        return true
+    }
+
     pub fn kreiraj(&mut self, recenzija: Recenzija) -> Option<bool>{
         let redovi = self.client.query("SELECT id, komentar, ocena, korisnik_id, knjiga_id, obrisano, status FROM recenzije WHERE korisnik_id = $1 AND knjiga_id=$2", &[&recenzija.korisnik_id, &recenzija.knjiga_id]);
     

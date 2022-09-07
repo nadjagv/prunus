@@ -21,6 +21,7 @@ fn main() {
             kontroler::kontroler::preuzmi_sve_po_knjizi,
             kontroler::kontroler::preuzmi_odobrene_po_knjizi,
             kontroler::kontroler::preuzmi_za_pregled,
+            kontroler::kontroler::postoji_recenzija_korisnik_knjiga,
             kontroler::kontroler::kreiraj,
             kontroler::kontroler::obrisi,
             kontroler::kontroler::odobri,

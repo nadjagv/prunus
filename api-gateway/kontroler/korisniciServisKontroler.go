@@ -3,6 +3,7 @@ package kontroler
 import (
 	"bytes"
 	"fmt"
+	"io"
 
 	"net/http"
 
@@ -101,9 +102,17 @@ func RutirajKorisniciServis(app *fiber.App) {
 	app.Post(prefiks, func(c *fiber.Ctx) error {
 		response, err := http.Post(korisniciServisUrl, "application/json", bytes.NewReader(c.Body()))
 		if err != nil {
+			fmt.Println(err)
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}
-		return c.SendStatus(response.StatusCode)
+		var body string
+		bodyBytes, err2 := io.ReadAll(response.Body)
+		if err2 != nil {
+			fmt.Println(err2)
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err2)
+		}
+		body = string(bodyBytes)
+		return c.Status(response.StatusCode).JSON(body)
 	})
 
 	app.Put(prefiks, func(c *fiber.Ctx) error {
@@ -123,7 +132,12 @@ func RutirajKorisniciServis(app *fiber.App) {
 		if err != nil {
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 		}
-		return c.SendStatus(response.StatusCode)
+		var body string
+		err = util.GetJson(response, &body)
+		if err != nil {
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+		return c.Status(response.StatusCode).JSON(body)
 	})
 
 	app.Delete(prefiks+"/:id", func(c *fiber.Ctx) error {

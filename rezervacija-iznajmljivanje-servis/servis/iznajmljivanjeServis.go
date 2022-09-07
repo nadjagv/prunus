@@ -8,6 +8,7 @@ import (
 	model "rezervacija-iznajmljivanje-servis/model"
 	repozitorijum "rezervacija-iznajmljivanje-servis/repozitorijum"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -44,7 +45,7 @@ func PreuzmiIzmedjuDatumaIzn(d1 time.Time, d2 time.Time) []model.Iznajmljivanje 
 
 func KreirajIzn(dto model.NovoIznajmljivanjeDTO) error {
 	fmt.Println(dto)
-	if dto.KnjigaId == 0 || dto.Email == " " {
+	if dto.KnjigaId == 0 || strings.Trim(dto.Email, " ") == "" {
 
 		return errors.New("nedostaju podaci")
 	}
@@ -58,6 +59,12 @@ func KreirajIzn(dto model.NovoIznajmljivanjeDTO) error {
 	defer response.Body.Close()
 
 	json.NewDecoder(response.Body).Decode(&korisnik)
+	if korisnik.Id == 0 {
+		return errors.New("korisnik ne postoji")
+	}
+	if korisnik.IstekClanarine.Before(time.Now()) {
+		return errors.New("korisniku je istekla članarina")
+	}
 
 	iznajmljivanjaKorisnika := PreuzmiPoKorisnikuAktivnaIzn(korisnik.Id)
 	if len(iznajmljivanjaKorisnika) >= 3 {

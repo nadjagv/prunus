@@ -57,6 +57,16 @@ pub fn preuzmi_za_pregled() -> content::Json<String> {
   return content::Json(Json(json!(res)).to_string());
 }
 
+#[get("/postoji/<korisnik_id>/<knjiga_id>", format = "application/json")]
+pub fn postoji_recenzija_korisnik_knjiga(korisnik_id: i32, knjiga_id: i32) -> content::Json<String> {
+  
+  let mut s = servis::RecenzijaServis::new();
+
+  let res = s.postoji_recenzija_korisnik_knjiga(korisnik_id, knjiga_id);
+
+  return content::Json(Json(json!(res)).to_string());
+}
+
 #[post("/", data = "<recenzija>")]
 pub fn kreiraj(recenzija: Json<Recenzija>) -> content::Json<String>{
     let mut s = servis::RecenzijaServis::new();
