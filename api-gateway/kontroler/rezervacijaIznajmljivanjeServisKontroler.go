@@ -18,6 +18,7 @@ func RutirajRezIznServis(app *fiber.App) {
 	var iznajmljivanjeServisUrl = "http://localhost:8083/iznajmljivanja/"
 	var rezervacijaServisUrl = "http://localhost:8083/rezervacije/"
 	var knjigeServisUrl = "http://localhost:8081/"
+	var korisniciServisUrl = "http://localhost:8082/"
 
 	//rezervacije
 	app.Get(prefiksRez, func(c *fiber.Ctx) error {
@@ -285,6 +286,7 @@ func RutirajRezIznServis(app *fiber.App) {
 
 		var rezultat []dto.IznajmljivanjeNazivKnjigeDTO
 		var knjiga dto.KnjigaSlikaDTO
+		var korisnik dto.KorisnikDTO
 		for _, rez := range body {
 			responseKnjige, err2 := http.Get(knjigeServisUrl + strconv.FormatUint(uint64(rez.KnjigaId), 10))
 			if err2 != nil {
@@ -296,9 +298,20 @@ func RutirajRezIznServis(app *fiber.App) {
 				return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 			}
 
+			responseKorisnik, err3 := http.Get(korisniciServisUrl + strconv.FormatUint(uint64(rez.KorisnikId), 10))
+			if err3 != nil {
+				return c.Status(fiber.ErrBadRequest.Code).JSON(err3)
+			}
+
+			err = util.GetJson(responseKorisnik, &korisnik)
+			if err != nil {
+				return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+			}
+
 			rezDto := dto.IznajmljivanjeNazivKnjigeDTO{
 				Id:                       rez.Id,
 				KorisnikId:               rez.KorisnikId,
+				KorisnikEmail:            korisnik.Email,
 				KnjigaId:                 rez.KnjigaId,
 				KnjigaNaziv:              knjiga.Naziv,
 				Aktivno:                  rez.Aktivno,
@@ -363,6 +376,7 @@ func RutirajRezIznServis(app *fiber.App) {
 		}
 		var rezultat []dto.IznajmljivanjeNazivKnjigeDTO
 		var knjiga dto.KnjigaSlikaDTO
+		var korisnik dto.KorisnikDTO
 		for _, rez := range body {
 			responseKnjige, err2 := http.Get(knjigeServisUrl + strconv.FormatUint(uint64(rez.KnjigaId), 10))
 			if err2 != nil {
@@ -374,9 +388,20 @@ func RutirajRezIznServis(app *fiber.App) {
 				return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 			}
 
+			responseKorisnik, err3 := http.Get(korisniciServisUrl + strconv.FormatUint(uint64(rez.KorisnikId), 10))
+			if err3 != nil {
+				return c.Status(fiber.ErrBadRequest.Code).JSON(err3)
+			}
+
+			err = util.GetJson(responseKorisnik, &korisnik)
+			if err != nil {
+				return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+			}
+
 			rezDto := dto.IznajmljivanjeNazivKnjigeDTO{
 				Id:                       rez.Id,
 				KorisnikId:               rez.KorisnikId,
+				KorisnikEmail:            korisnik.Email,
 				KnjigaId:                 rez.KnjigaId,
 				KnjigaNaziv:              knjiga.Naziv,
 				Aktivno:                  rez.Aktivno,

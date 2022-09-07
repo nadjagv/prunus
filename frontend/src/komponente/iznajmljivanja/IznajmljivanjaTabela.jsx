@@ -96,6 +96,7 @@ function Row({row, ponovoPreuzmi, clan}) {
         
         
         <TableCell>{row.Id}</TableCell>
+        <TableCell>{row.KorisnikEmail}</TableCell>
         <TableCell>{row.KnjigaNaziv}</TableCell>
         <TableCell>{iznajmljivanjeFormatiran}</TableCell>
         <TableCell>{rokFormatiran}</TableCell>
@@ -224,6 +225,16 @@ export default function IznajmljivanjaTabela() {
                     <SwapVertIcon></SwapVertIcon>
                 </IconButton>
                     <b>Id</b>
+                </TableCell>
+                <TableCell>
+                <IconButton
+                    size="small"
+                    onClick={() => requestSort('KorisnikEmail')}
+                    className={getClassNamesFor('KorisnikEmail')}
+                >
+                    <SwapVertIcon></SwapVertIcon>
+                </IconButton>
+                    <b>Korisnik</b>
                 </TableCell>
                 <TableCell>
                 <IconButton

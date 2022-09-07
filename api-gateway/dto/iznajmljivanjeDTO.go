@@ -25,4 +25,5 @@ type IznajmljivanjeNazivKnjigeDTO struct {
 	Produzeno                bool
 	Aktivno                  bool
 	KnjigaNaziv              string
+	KorisnikEmail            string
 }
