@@ -35,7 +35,7 @@ const RecenzijaAddDijalog = ({otvoren, zatvoriDijalog, knjigaId}) => {
           .post(Putanje.recenzijeGWURL, dto)
           .then((response) => {
             console.log(response.data);
-            zatvoriDijalog()
+            zatvoriDijalog(true)
             alert("Zahtev uspešno obrađen!");
             
           })
@@ -44,7 +44,7 @@ const RecenzijaAddDijalog = ({otvoren, zatvoriDijalog, knjigaId}) => {
           });
   }
   function odustani(){
-    zatvoriDijalog()
+    zatvoriDijalog(false)
   }
 
   return (

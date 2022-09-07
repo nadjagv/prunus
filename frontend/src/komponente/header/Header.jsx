@@ -63,6 +63,7 @@ const Header = ({ulogovan, handleUlogovan}) => {
               
               { korisnik.Tip==0 && <Tab label="Rezervacije" onClick={() => navigate("/rezervacije")}/>}
               { korisnik.Tip==0 && <Tab label="Iznajmljivanja"onClick={() => navigate("/iznajmljivanja")}/>}
+              { korisnik.Tip==0 && <Tab label="Dnevnik čitanja"onClick={() => navigate("/istorija")}/>}
               { korisnik.Tip==0 && <Tab label="Pretplate" onClick={() => navigate("/pretplate")}/>}
               { korisnik.Tip==0 && <Tab label="Preporuka"onClick={() => navigate("/preporuka")}/>}
 

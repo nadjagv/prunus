@@ -22,6 +22,8 @@ function App() {
 
   function handleUlogovan(v) {
     setUlogovan(v);
+    console.log("ulogovan")
+    console.log(v)
   }
   return (
     <>
@@ -44,6 +46,7 @@ function App() {
         <Route path="/rezervacije" element = {<RezervacijeTabela/>} />
         <Route path="/pretplate" element = {<PretplateTabela/>} />
         <Route path="/iznajmljivanja" element = {<IznajmljivanjaTabela/>} />
+        <Route path="/istorija" element = {<IznajmljivanjaTabela istorija={true}/>} />
         <Route path="/recenzije" element = {<RecenzijeTabela/>} />
         <Route path="/izvestaji" element = {<IzvestajPregled/>} />
         <Route path="/preporuka" element = {<KnjigePregled preporuka={true}/>} />

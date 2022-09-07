@@ -31,6 +31,10 @@ func PreuzmiPoKorisnikuAktivnaIzn(korisnikId uint) []model.Iznajmljivanje {
 	return repozitorijum.PreuzmiAktivnaKorisnikIzn(korisnikId)
 }
 
+func PreuzmiSveKorisnikIzn(korisnikId uint) []model.Iznajmljivanje {
+	return repozitorijum.PreuzmiSveKorisnikIzn(korisnikId)
+}
+
 func PreuzmiPoslednjih5KorisnikIzn(korisnikId uint) []model.Iznajmljivanje {
 	sve := repozitorijum.PreuzmiSveKorisnikIzn(korisnikId)
 	if len(sve) > 5 {

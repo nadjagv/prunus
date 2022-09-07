@@ -417,6 +417,72 @@ func RutirajRezIznServis(app *fiber.App) {
 		return c.Status(response.StatusCode).JSON(rezultat)
 	})
 
+	app.Get(prefiksIzn+"/sve-korisnik/:id", func(c *fiber.Ctx) error {
+		authHeaderStr := string(c.Request().Header.Peek("Authorization"))
+		email, tip, err := util.Autentifikuj(authHeaderStr[7:])
+		if err != nil {
+			return c.SendStatus(fiber.StatusUnauthorized)
+		}
+		if tip != 0 && tip != 1 && tip != 2 {
+			return c.SendStatus(fiber.StatusUnauthorized)
+		}
+		print("Zahtev poslao: " + email + "\n")
+		idStr := c.Params("id")
+		response, err := http.Get(iznajmljivanjeServisUrl + "sve-korisnik/" + idStr)
+		if err != nil {
+			fmt.Println(err)
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+
+		var body []dto.IznajmljivanjeDTO
+		err = util.GetJson(response, &body)
+		if err != nil {
+			fmt.Println(err)
+			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		}
+		var rezultat []dto.IznajmljivanjeNazivKnjigeDTO
+		var knjiga dto.KnjigaSlikaDTO
+		var korisnik dto.KorisnikDTO
+		for _, rez := range body {
+			responseKnjige, err2 := http.Get(knjigeServisUrl + strconv.FormatUint(uint64(rez.KnjigaId), 10))
+			if err2 != nil {
+				return c.Status(fiber.ErrBadRequest.Code).JSON(err2)
+			}
+
+			err = util.GetJson(responseKnjige, &knjiga)
+			if err != nil {
+				return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+			}
+
+			responseKorisnik, err3 := http.Get(korisniciServisUrl + strconv.FormatUint(uint64(rez.KorisnikId), 10))
+			if err3 != nil {
+				return c.Status(fiber.ErrBadRequest.Code).JSON(err3)
+			}
+
+			err = util.GetJson(responseKorisnik, &korisnik)
+			if err != nil {
+				return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+			}
+
+			rezDto := dto.IznajmljivanjeNazivKnjigeDTO{
+				Id:                       rez.Id,
+				KorisnikId:               rez.KorisnikId,
+				KorisnikEmail:            korisnik.Email,
+				KnjigaId:                 rez.KnjigaId,
+				KnjigaNaziv:              knjiga.Naziv,
+				Aktivno:                  rez.Aktivno,
+				DatumVremeIznajmljivanja: rez.DatumVremeIznajmljivanja,
+				RokVracanja:              rez.RokVracanja,
+				DatumVremeVracanja:       rez.DatumVremeVracanja,
+				ZakasneloVracanje:        rez.ZakasneloVracanje,
+				Produzeno:                rez.Produzeno,
+			}
+			rezultat = append(rezultat, rezDto)
+		}
+
+		return c.Status(response.StatusCode).JSON(rezultat)
+	})
+
 	app.Post(prefiksIzn, func(c *fiber.Ctx) error {
 		authHeaderStr := string(c.Request().Header.Peek("Authorization"))
 		email, tip, err := util.Autentifikuj(authHeaderStr[7:])

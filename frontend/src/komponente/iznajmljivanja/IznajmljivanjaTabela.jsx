@@ -41,8 +41,11 @@ function Row({row, ponovoPreuzmi, clan}) {
           });
     }
 
-    function toggleDijalog(){
+    function toggleDijalog(promenjeno){
         setDijalogOtvoren(!dijalogOtvoren)
+        if(promenjeno){
+          proveriRecenzijaPostoji()
+        }
     }
 
     function vrati(){
@@ -151,7 +154,7 @@ function Row({row, ponovoPreuzmi, clan}) {
 
 
 
-export default function IznajmljivanjaTabela() {
+export default function IznajmljivanjaTabela({istorija}) {
     const [iznajmljivanja, setIznajmljivanja] = useState([])
     const [clan, setClan] = useState(false)
 
@@ -168,22 +171,36 @@ export default function IznajmljivanjaTabela() {
     useEffect(()=>{
         preuzmiSve()
         
-    }, [])
+    }, [istorija])
 
     const preuzmiSve = async () => {
         var korisnik = AuthServis.preuzmiKorisnika()
         if (korisnik.Tip == 0){
             setClan(true)
-            axios
-            .get(Putanje.iznajmljivanjaGWURL+ "/aktivna-korisnik/" + korisnik.Id)
-            .then((response) => {
-                console.log(response.data);
-                setIznajmljivanja(response.data)
-                
-            })
-            .catch((error) => {
-                alert("Neuspešno dobavljanje iznajmljivanja.");
-            });
+            if (istorija){
+              axios
+              .get(Putanje.iznajmljivanjaGWURL+ "/sve-korisnik/" + korisnik.Id)
+              .then((response) => {
+                  console.log(response.data);
+                  setIznajmljivanja(response.data)
+                  
+              })
+              .catch((error) => {
+                  alert("Neuspešno dobavljanje iznajmljivanja.");
+              });
+
+            }else{
+              axios
+              .get(Putanje.iznajmljivanjaGWURL+ "/aktivna-korisnik/" + korisnik.Id)
+              .then((response) => {
+                  console.log(response.data);
+                  setIznajmljivanja(response.data)
+                  
+              })
+              .catch((error) => {
+                  alert("Neuspešno dobavljanje iznajmljivanja.");
+              });
+            }
         }
         else{
             axios
