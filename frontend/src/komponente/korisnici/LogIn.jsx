@@ -1,15 +1,24 @@
-import { Button, Card, CardContent, Grid, Paper, TextField } from "@mui/material";
+import { Button, Card, CardContent, FormControl, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, Paper, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthServis from "../../servisi/AuthServis";
 import axios from "axios";
 import Putanje from "../../konstante/Putanje";
-import { PropaneSharp } from "@mui/icons-material";
+import { PropaneSharp, Visibility, VisibilityOff } from "@mui/icons-material";
 
 const LogIn = ({handleUlogovan}) => {
     const [email, setEmail] = useState("");
     const [lozinka, setLozinka] = useState("");
     const navigation = useNavigate();
+    const [prikaziLozinku, setPrikaziLozinku] = useState("");
+
+    const handlePrikaziLozinku = () => {
+        setPrikaziLozinku(!prikaziLozinku)
+      };
+    
+    const handleMouseDownLozinka = (event) => {
+    event.preventDefault();
+    };
 
     useEffect(() => {
         if (AuthServis.preuzmiKorisnika()) {
@@ -54,16 +63,32 @@ const LogIn = ({handleUlogovan}) => {
                     setEmail(e.target.value);
                 }}
                 ></TextField>
-                <TextField
-                label="Lozinka"
-                placeholder="Unesite lozinku"
-                type="password"
-                onChange={(e) => {
-                    setLozinka(e.target.value);
-                }}
-                fullWidth
-                required
-                ></TextField>
+                <FormControl variant="outlined" fullWidth>
+                <InputLabel htmlFor="lozinka">Lozinka</InputLabel>
+                <OutlinedInput
+                        id="lozinka"
+                        label="Lozinka"
+                        placeholder="Unesite Vašu lozinku"
+                        fullWidth
+                        required
+                        type={prikaziLozinku ? 'text' : 'password'}
+                        onChange={(e) => {
+                            setLozinka(e.target.value);
+                        }}
+                        endAdornment={
+                            <InputAdornment position="end">
+                            <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={handlePrikaziLozinku}
+                                onMouseDown={handleMouseDownLozinka}
+                                edge="end"
+                            >
+                                {prikaziLozinku ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                            </InputAdornment>
+                        }
+                    ></OutlinedInput>
+                </FormControl>
                 <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 10}}>
                     <Button 
                     type="submit"

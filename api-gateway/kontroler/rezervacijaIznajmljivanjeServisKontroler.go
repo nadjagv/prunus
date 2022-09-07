@@ -181,7 +181,8 @@ func RutirajRezIznServis(app *fiber.App) {
 		korisnikId := c.Params("korisnikId")
 		response, err := http.Get(rezervacijaServisUrl + "knjiga-korisnik/" + knjigaId + "/" + korisnikId)
 		if err != nil {
-			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+			fmt.Println(err)
+			return c.Status(response.StatusCode).JSON(err)
 		}
 
 		var body dto.RezervacijaDTO

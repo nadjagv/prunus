@@ -19,7 +19,7 @@ func PreuzmiSveRez() []model.Rezervacija {
 func PreuzmiPoIdRez(id uint) (model.Rezervacija, error) {
 	return repozitorijum.PreuzmiPoIdRez(id)
 }
-func PreuzmiAktivnuKorisnikKnjigaRez(id uint, knjigaId uint) model.Rezervacija {
+func PreuzmiAktivnuKorisnikKnjigaRez(id uint, knjigaId uint) (model.Rezervacija, error) {
 	return repozitorijum.PreuzmiAktivnuKorisnikKnjigaRez(id, knjigaId)
 }
 
@@ -65,7 +65,7 @@ func OtkaziRezervaciju(id uint) error {
 		return err
 	}
 
-	request, err := http.NewRequest(http.MethodPut, knjigeServisUrl+"povecaj-kolicinu/"+strconv.FormatUint(uint64(id), 10), nil)
+	request, err := http.NewRequest(http.MethodPut, knjigeServisUrl+"povecaj-kolicinu/"+strconv.FormatUint(uint64(rezervacija.KnjigaId), 10), nil)
 	if err != nil {
 		fmt.Println(err)
 		return err

@@ -59,6 +59,11 @@ func KreirajIzn(dto model.NovoIznajmljivanjeDTO) error {
 
 	json.NewDecoder(response.Body).Decode(&korisnik)
 
+	iznajmljivanjaKorisnika := PreuzmiPoKorisnikuAktivnaIzn(korisnik.Id)
+	if len(iznajmljivanjaKorisnika) >= 3 {
+		return errors.New("korisnik je vec iznajmio maksimalan broj knjiga")
+	}
+
 	//upit da se smanji dostupna kolicina
 	postojiRezervacija := false
 	rezervacijeKorisnika := repozitorijum.PreuzmiAktivneKorisnikRez(korisnik.Id)

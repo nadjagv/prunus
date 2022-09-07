@@ -16,11 +16,14 @@ import AuthServis from '../../servisi/AuthServis';
 import { useNavigate } from 'react-router-dom';
 import { Stack } from '@mui/system';
 
+
 const PromenaLozinke = () => {
     const [stara, setStara] = useState("");
     const [nova, setNova] = useState("");
     const [prikaziLozinku, setPrikaziLozinku] = useState("");
     const [prikaziLozinkuNova, setPrikaziLozinkuNova] = useState("");
+
+    const navigate = useNavigate()
 
     const handlePrikaziLozinku = () => {
         setPrikaziLozinku(!prikaziLozinku)
@@ -91,10 +94,9 @@ const PromenaLozinke = () => {
             ></OutlinedInput>
         </FormControl>
         <FormControl variant="outlined">
-            <InputLabel htmlFor="stara-lozinka">Nova lozinka</InputLabel>
+            <InputLabel htmlFor="nova-lozinka">Nova lozinka</InputLabel>
             <OutlinedInput
                     id="nova-lozinka"
-                    margin="normal"
                     label="Nova lozinka"
                     placeholder="Unesite novu lozinku"
                     fullWidth
@@ -118,19 +120,31 @@ const PromenaLozinke = () => {
                 ></OutlinedInput>
             </FormControl>
             </Stack>
-
-            <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 10}}>
-                    <Button 
-                    type="submit"
-                    color="primary"
-                    variant="contained"
-                    onClick={() => {
-                        obradiPotvrdu()
-                    }}
-                    >
-                    Potvrdi
-                    </Button>
-                </div>
+            <Stack spacing={2} direction="row" style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 10}}>
+            
+              <Button 
+                color="primary"
+                variant="contained"
+                onClick={() => {
+                    navigate("/knjige")
+                }}
+                >
+                Odustani
+                </Button>
+                
+                <Button 
+                type="submit"
+                color="primary"
+                variant="contained"
+                onClick={() => {
+                    obradiPotvrdu()
+                }}
+                >
+                Potvrdi
+                </Button>
+              
+                
+            </Stack>
             
         </CardContent>
       </Card>

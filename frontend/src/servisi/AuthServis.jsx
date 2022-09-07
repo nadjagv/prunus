@@ -1,5 +1,5 @@
 const preuzmiKorisnika = () => {
-    const korisnik = JSON.parse(localStorage.getItem("korisnik"));
+    const korisnik = JSON.parse(sessionStorage.getItem("korisnik"));
     return korisnik;
   };
   
@@ -9,11 +9,11 @@ const preuzmiKorisnika = () => {
   }
   
   const postaviKorisnika = (korisnik) => {
-    localStorage.setItem("korisnik", JSON.stringify(korisnik));
+    sessionStorage.setItem("korisnik", JSON.stringify(korisnik));
 
   };
   
   const ukloniKorisnika = () => {
-    localStorage.removeItem("korisnik");
+    sessionStorage.removeItem("korisnik");
   };
   export default { preuzmiKorisnika,jeAuth, postaviKorisnika, ukloniKorisnika };

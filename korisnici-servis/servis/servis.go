@@ -24,6 +24,12 @@ func ProveriKredencijale(kredencijali util.Kredencijali) (model.Korisnik, error)
 	if korisnikUBazi.Blokiran {
 		return model.Korisnik{}, errors.New("Korisnik blokiran.")
 	}
+
+	if korisnikUBazi.Tip == 0 {
+		if korisnikUBazi.IstekClanarine.Before(time.Now()) {
+			return model.Korisnik{}, errors.New("Članarina je istekla.")
+		}
+	}
 	ocekivanaLozinka := korisnikUBazi.Lozinka
 
 	err = bcrypt.CompareHashAndPassword([]byte(ocekivanaLozinka), []byte(kredencijali.Lozinka))
@@ -76,7 +82,7 @@ func Kreiraj(dto model.KorisnikDTO) error {
 
 	dto.Sumnjiv = false
 	dto.Blokiran = false
-	dto.IstekClanarine = time.Now()
+	dto.IstekClanarine = time.Now().AddDate(1, 0, 0)
 	err = repozitorijum.Kreiraj(dto.MapirajNaObjekat())
 
 	return err

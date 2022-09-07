@@ -15,6 +15,7 @@ const Knjiga = () =>{
     const [korisnik, setKorisnik] = useState({})
     const [pretplataPostoji, setPretplataPostoji] = useState(false)
     const [rezervacijaPostoji, setRezervacijaPostoji] = useState(false)
+    const [maksimalnoRezervisao, setMaksimalnoRezervisao] = useState(false)
 
     useEffect(()=>{
         setKorisnik(AuthServis.preuzmiKorisnika())     
@@ -69,9 +70,10 @@ const Knjiga = () =>{
           .then((response) => {
             console.log(response.data)
             setRezervacijaPostoji(response.data.Id!=0)
+            setMaksimalnoRezervisao(false)
           })
           .catch((error) => {
-            console.log("Rezervacija ne postoji.")
+            setMaksimalnoRezervisao(true)
           });
         }
         
@@ -89,7 +91,6 @@ const Knjiga = () =>{
           .then((response) => {
             console.log(response.data)
             setPretplataPostoji(true)
-            alert("Uspešna pretplata.")
           })
           .catch((error) => {
             alert("Neuspešna pretplata.")
@@ -106,10 +107,9 @@ const Knjiga = () =>{
           .post(`${Putanje.rezervacijeGWURL}`, rezervacijaDto)
           .then((response) => {
             setRezervacijaPostoji(true)
-            alert("Uspešna rezervacija.")
           })
           .catch((error) => {
-            alert("Neuspešna pretplata.")
+            alert("Neuspešna rezervacija.")
           });
     }
 
@@ -148,7 +148,7 @@ const Knjiga = () =>{
                             {knjiga.TrenutnoDostupno<=0 && !pretplataPostoji &&
                             <div>
                                 
-                                <p>Knjiga trenutno nije dostupna. Moguća je praćenje dostupnosti klikom na dugme PRETPLATI SE.</p>
+                                <p>Knjiga trenutno nije dostupna. Moguće je praćenje dostupnosti klikom na dugme PRETPLATI SE.</p>
                                 <br/>
                                 <Button 
                                     color="primary" 
@@ -169,12 +169,14 @@ const Knjiga = () =>{
                             <div>
                                 <p>Knjiga je dostupna.</p>
                                 <br/>
+                                {!maksimalnoRezervisao &&
                                 <Button 
                                     color="primary" 
                                     variant="contained"
                                     onClick={() => rezervisi()}>
                                         Rezerviši
                                 </Button>
+                                }
                             </div>
                             }
                             { knjiga.TrenutnoDostupno>0 && rezervacijaPostoji &&

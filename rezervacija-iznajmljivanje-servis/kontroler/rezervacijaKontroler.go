@@ -65,12 +65,17 @@ func OtkrijEndpointeRez(app *fiber.App) {
 			return fiber.NewError(fiber.StatusBadRequest, err2.Error())
 		}
 
-		rez := servis.PreuzmiAktivnuKorisnikKnjigaRez(uint(korisnikId), uint(knjigaId))
+		rez, err3 := servis.PreuzmiAktivnuKorisnikKnjigaRez(uint(korisnikId), uint(knjigaId))
+		if err3 != nil {
+			aktivne := servis.PreuzmiAktivneKorisnikRez(uint(korisnikId))
+			if len(aktivne) >= 3 {
+				return fiber.NewError(fiber.StatusMethodNotAllowed, err3.Error())
+			}
+		}
 		return c.Status(fiber.StatusOK).JSON(rez.MapirajNaDTO())
 	})
 
 	app.Post(prefiks+"/", func(c *fiber.Ctx) error {
-		fmt.Println("alsf;l")
 		var payload model.RezervacijaDTO
 		err := c.BodyParser(&payload)
 		if err != nil {
