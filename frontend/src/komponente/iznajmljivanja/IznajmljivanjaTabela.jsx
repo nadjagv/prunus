@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import Putanje from '../../konstante/Putanje';
 import axios from "axios";
-import { Button, Grid, Stack } from '@mui/material';
+import { Button, Grid, MenuItem, Select, Stack } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import useSortableData from '../../util/SortUtil';
 import { format } from 'date-fns-tz';
@@ -19,7 +19,7 @@ import AuthServis from '../../servisi/AuthServis';
 import RecenzijaAddDijalog from '../recenzije/RecenzijaAddDijalog';
 
 
-function Row({row, ponovoPreuzmi, clan}) {
+function Row({row, ponovoPreuzmi, clan, filter}) {
     const [dijalogOtvoren, setDijalogOtvoren] = useState(false);
     const [postojiRecenzija, setPostojiRecenzija] = useState(false);
 
@@ -94,7 +94,7 @@ function Row({row, ponovoPreuzmi, clan}) {
   return (
     <React.Fragment>
         
-
+        {((filter==0) || (filter==1 && row.Aktivno==true) || (filter==2 && row.Aktivno==false))&&
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
         
         
@@ -148,6 +148,7 @@ function Row({row, ponovoPreuzmi, clan}) {
         </TableCell>
         
       </TableRow>
+    }
     </React.Fragment>
   );
 }
@@ -157,6 +158,7 @@ function Row({row, ponovoPreuzmi, clan}) {
 export default function IznajmljivanjaTabela({istorija}) {
     const [iznajmljivanja, setIznajmljivanja] = useState([])
     const [clan, setClan] = useState(false)
+    const [filter, setFilter] = useState(0)
 
     const { items, requestSort, sortConfig } = useSortableData(iznajmljivanja);
     const getClassNamesFor = (name) => {
@@ -227,7 +229,23 @@ export default function IznajmljivanjaTabela({istorija}) {
       justify="center"
       style={{ minHeight: '100vh' }}
         >
-    
+
+    {(!clan || istorija) &&
+    <Stack spacing={2} direction="row" sx={{margin:3}}>
+        <Select
+            id="simple-select"
+            value={filter}
+            label="Status"
+            fullWidth
+            onChange={(e) => {setFilter(e.target.value);}}
+            >
+            <MenuItem value={0}>Sve</MenuItem>
+            <MenuItem value={1}>Aktivna</MenuItem>
+            <MenuItem value={2}>Neaktivna</MenuItem>
+            
+        </Select>
+        </Stack>
+    }
     <TableContainer component={Paper} sx={{margin: 10, width: 0.8}}>
         <Table aria-label="collapsible table">
             <TableHead>
@@ -307,7 +325,7 @@ export default function IznajmljivanjaTabela({istorija}) {
             {items!= null &&
             <TableBody>
             {items.map((row) => (
-                <Row key={row.Id} row={row} ponovoPreuzmi={preuzmiSve} clan={clan}/>
+                <Row key={row.Id} row={row} ponovoPreuzmi={preuzmiSve} clan={clan} filter={filter}/>
             ))}
 
             </TableBody>

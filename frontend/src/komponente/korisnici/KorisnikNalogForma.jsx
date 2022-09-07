@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
-import { Card, CardContent, IconButton, MenuItem, Select } from '@mui/material';
+import { Card, CardContent, IconButton, MenuItem, Select, Typography } from '@mui/material';
 import { PhotoCamera, SettingsPhone } from '@mui/icons-material';
 import Putanje from '../../konstante/Putanje';
 import axios from "axios";
@@ -105,6 +105,7 @@ const KorisnikNalogForma = ({ dodavanjeMod}) => {
           ></TextField>
 
           {dodavanjeMod &&
+          <div>
           <TextField
           margin="normal"
           label="Lozinka"
@@ -115,6 +116,11 @@ const KorisnikNalogForma = ({ dodavanjeMod}) => {
             setLozinka(e.target.value);
           }}
           ></TextField>
+
+          <Typography variant="body2" sx={{opacity: 0.7}}>
+            *Dužina minimalno 9 karaktera od kojih je: <br/>bar 1 veliko slovo, <br/>bar 1 znak, <br/>bar 1 cifra. 
+          </Typography>
+          </div>
           }
           <TextField
           margin="normal"

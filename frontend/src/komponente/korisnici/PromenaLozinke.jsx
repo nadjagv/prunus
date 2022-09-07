@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
-import { Card, CardContent, FormControl, IconButton, InputAdornment, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
+import { Card, CardContent, FormControl, IconButton, InputAdornment, InputLabel, MenuItem, OutlinedInput, Select, Typography } from '@mui/material';
 import { PhotoCamera, SettingsPhone, Visibility, VisibilityOff } from '@mui/icons-material';
 import Putanje from '../../konstante/Putanje';
 import axios from "axios";
@@ -119,6 +119,9 @@ const PromenaLozinke = () => {
                     }
                 ></OutlinedInput>
             </FormControl>
+            <Typography variant="body2" sx={{opacity: 0.7}}>
+            *Dužina minimalno 9 karaktera od kojih je: <br/>bar 1 veliko slovo, <br/>bar 1 znak, <br/>bar 1 cifra. 
+          </Typography>
             </Stack>
             <Stack spacing={2} direction="row" style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 10}}>
             
@@ -131,7 +134,7 @@ const PromenaLozinke = () => {
                 >
                 Odustani
                 </Button>
-                
+
                 <Button 
                 type="submit"
                 color="primary"
