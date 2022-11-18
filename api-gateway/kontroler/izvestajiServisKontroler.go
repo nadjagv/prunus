@@ -14,15 +14,14 @@ func RutirajIzvestajiServis(app *fiber.App) {
 	var izvestajiServisUrl = "http://localhost:8001/"
 
 	app.Get(prefiks, func(c *fiber.Ctx) error {
-		authHeaderStr := string(c.Request().Header.Peek("Authorization"))
-		email, tip, err := util.Autentifikuj(authHeaderStr[7:])
-		if err != nil {
+		dozvola := util.DozvolaPristupa{
+			Clan:        false,
+			Bibliotekar: true,
+			Admin:       true,
+		}
+		if !util.Auth(c, dozvola) {
 			return c.SendStatus(fiber.StatusUnauthorized)
 		}
-		if tip != 2 && tip != 1 {
-			return c.SendStatus(fiber.StatusUnauthorized)
-		}
-		print("Zahtev poslao: " + email + "\n")
 
 		pocetak := c.Query("pocetak")
 		kraj := c.Query("kraj")

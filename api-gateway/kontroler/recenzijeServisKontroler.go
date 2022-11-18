@@ -115,15 +115,14 @@ func RutirajRecenzijeServis(app *fiber.App) {
 	})
 
 	app.Put(prefiks+"/odobri/:id", func(c *fiber.Ctx) error {
-		authHeaderStr := string(c.Request().Header.Peek("Authorization"))
-		email, tip, err := util.Autentifikuj(authHeaderStr[7:])
-		if err != nil {
+		dozvola := util.DozvolaPristupa{
+			Clan:        false,
+			Bibliotekar: true,
+			Admin:       false,
+		}
+		if !util.Auth(c, dozvola) {
 			return c.SendStatus(fiber.StatusUnauthorized)
 		}
-		if tip != 1 {
-			return c.SendStatus(fiber.StatusUnauthorized)
-		}
-		print("Zahtev poslao: " + email + "\n")
 		idStr := c.Params("id")
 		request, err := http.NewRequest(http.MethodPut, recenzijeServisUrl+"odobri/"+idStr, bytes.NewBuffer(c.Body()))
 		if err != nil {
@@ -139,15 +138,14 @@ func RutirajRecenzijeServis(app *fiber.App) {
 	})
 
 	app.Put(prefiks+"/odbij/:id", func(c *fiber.Ctx) error {
-		authHeaderStr := string(c.Request().Header.Peek("Authorization"))
-		email, tip, err := util.Autentifikuj(authHeaderStr[7:])
-		if err != nil {
+		dozvola := util.DozvolaPristupa{
+			Clan:        false,
+			Bibliotekar: true,
+			Admin:       false,
+		}
+		if !util.Auth(c, dozvola) {
 			return c.SendStatus(fiber.StatusUnauthorized)
 		}
-		if tip != 1 {
-			return c.SendStatus(fiber.StatusUnauthorized)
-		}
-		print("Zahtev poslao: " + email + "\n")
 		idStr := c.Params("id")
 		request, err := http.NewRequest(http.MethodPut, recenzijeServisUrl+"odbij/"+idStr, bytes.NewBuffer(c.Body()))
 		if err != nil {
@@ -163,15 +161,14 @@ func RutirajRecenzijeServis(app *fiber.App) {
 	})
 
 	app.Post(prefiks, func(c *fiber.Ctx) error {
-		authHeaderStr := string(c.Request().Header.Peek("Authorization"))
-		email, tip, err := util.Autentifikuj(authHeaderStr[7:])
-		if err != nil {
+		dozvola := util.DozvolaPristupa{
+			Clan:        true,
+			Bibliotekar: false,
+			Admin:       false,
+		}
+		if !util.Auth(c, dozvola) {
 			return c.SendStatus(fiber.StatusUnauthorized)
 		}
-		if tip != 0 {
-			return c.SendStatus(fiber.StatusUnauthorized)
-		}
-		print("Zahtev poslao: " + email + "\n")
 		response, err := http.Post(recenzijeServisUrl, "application/json", bytes.NewReader(c.Body()))
 		if err != nil {
 			return c.Status(fiber.ErrBadRequest.Code).JSON(err)
@@ -180,15 +177,14 @@ func RutirajRecenzijeServis(app *fiber.App) {
 	})
 
 	app.Get(prefiks+"/postoji/:korisnikId/:knjigaId", func(c *fiber.Ctx) error {
-		authHeaderStr := string(c.Request().Header.Peek("Authorization"))
-		email, tip, err := util.Autentifikuj(authHeaderStr[7:])
-		if err != nil {
+		dozvola := util.DozvolaPristupa{
+			Clan:        true,
+			Bibliotekar: false,
+			Admin:       false,
+		}
+		if !util.Auth(c, dozvola) {
 			return c.SendStatus(fiber.StatusUnauthorized)
 		}
-		if tip != 0 {
-			return c.SendStatus(fiber.StatusUnauthorized)
-		}
-		print("Zahtev poslao: " + email + "\n")
 
 		korisnikId := c.Params("korisnikId")
 		knjigaId := c.Params("knjigaId")

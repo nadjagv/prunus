@@ -65,6 +65,27 @@ func OtkrijEndpointe() {
 		return c.Status(fiber.StatusOK).JSON(korisnikTokenInfo)
 	})
 
+	app.Post("/auth", func(c *fiber.Ctx) error {
+		var payload util.DozvolaPristupa
+		err := c.BodyParser(&payload)
+		if err != nil {
+			print(err.Error())
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+
+		authHeaderStr := string(c.Request().Header.Peek("Authorization"))
+		email, tip, err := util.Autentifikuj(authHeaderStr[7:])
+		if err != nil {
+			return c.SendStatus(fiber.StatusUnauthorized)
+		}
+		autorizovan := util.Autorizuj(payload, tip)
+		if !autorizovan {
+			return c.SendStatus(fiber.StatusUnauthorized)
+		}
+		print("Zahtev poslao: " + email + "\n")
+		return c.Status(fiber.StatusOK).JSON(true)
+	})
+
 	app.Get("/", func(c *fiber.Ctx) error {
 		korisnici := servis.PreuzmiSve()
 		return c.Status(fiber.StatusOK).JSON(korisnici)

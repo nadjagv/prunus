@@ -2,9 +2,14 @@ package util
 
 import (
 	"api-gateway/dto"
-	"errors"
+	"bytes"
 
 	"github.com/golang-jwt/jwt"
+
+	"encoding/json"
+	"net/http"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 type Kredencijali struct {
@@ -18,23 +23,32 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
+type DozvolaPristupa struct {
+	Clan        bool
+	Bibliotekar bool
+	Admin       bool
+}
+
 var jwtKey = []byte("prunus_jwt_kljuc")
+var korisniciServisAuthUrl = "http://localhost:8082/auth"
 
-func Autentifikuj(tokenStr string) (string, dto.TipKorisnika, error) {
-	claims := &Claims{}
+func Auth(c *fiber.Ctx, dozvola DozvolaPristupa) bool {
+	authHeaderStr := string(c.Request().Header.Peek("Authorization"))
+	if authHeaderStr == "" {
+		return false
+	}
 
-	token, err := jwt.ParseWithClaims(tokenStr, claims,
-		func(t *jwt.Token) (interface{}, error) {
-			return jwtKey, nil
-		})
-
+	body, _ := json.Marshal(dozvola)
+	request, err := http.NewRequest(http.MethodPost, korisniciServisAuthUrl, bytes.NewBuffer([]byte(body)))
 	if err != nil {
-		return "", 0, errors.New("Unauthorized")
+		return false
 	}
-
-	if !token.Valid {
-		return "", 0, errors.New("Unauthorized")
+	request.Header.Set("Authorization", authHeaderStr)
+	request.Header.Set("Content-Type", "application/json; charset=utf-8")
+	client := &http.Client{}
+	response, err := client.Do(request)
+	if response.StatusCode == fiber.StatusOK {
+		return true
 	}
-
-	return claims.Email, claims.Tip, nil
+	return false
 }
