@@ -8,7 +8,6 @@ type Pretplata struct {
 	KorisnikId    uint   `gorm:"not null;"`
 	KorisnikEmail string `gorm:"not null;"`
 	KnjigaId      uint   `gorm:"not null;"`
-	KnjigaNaziv   string `gorm:"not null;"`
 }
 
 func (Pretplata) TableName() string {
@@ -24,13 +23,13 @@ type PretplataDTO struct {
 	KnjigaNaziv   string
 }
 
-func (pretplata *Pretplata) MapirajNaDTO() PretplataDTO {
+func (pretplata *Pretplata) MapirajNaDTO(knjigaNaziv string) PretplataDTO {
 	return PretplataDTO{
 		Id:            pretplata.ID,
 		KorisnikId:    pretplata.KorisnikId,
 		KorisnikEmail: pretplata.KorisnikEmail,
 		KnjigaId:      pretplata.KnjigaId,
-		KnjigaNaziv:   pretplata.KnjigaNaziv,
+		KnjigaNaziv:   knjigaNaziv,
 	}
 }
 
@@ -39,6 +38,5 @@ func (pretplata *PretplataDTO) MapirajNaObjekat() Pretplata {
 		KorisnikId:    pretplata.KorisnikId,
 		KorisnikEmail: pretplata.KorisnikEmail,
 		KnjigaId:      pretplata.KnjigaId,
-		KnjigaNaziv:   pretplata.KnjigaNaziv,
 	}
 }

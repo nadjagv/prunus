@@ -167,10 +167,11 @@ func OtkrijEndpointe() {
 		pretplate := servis.PreuzmiPoKorisniku(uint(id))
 		var rezultat []model.PretplataDTO
 		for _, p := range pretplate {
-			rezultat = append(rezultat, p.MapirajNaDTO())
+			knjiga, _ := servis.PreuzmiPoId(p.KnjigaId)
+			rezultat = append(rezultat, p.MapirajNaDTO(knjiga.Naziv))
 		}
 
-		return c.Status(fiber.StatusOK).JSON(pretplate)
+		return c.Status(fiber.StatusOK).JSON(rezultat)
 	})
 
 	app.Get("/pretplata/knjiga-korisnik/:knjigaId/:korisnikId", func(c *fiber.Ctx) error {
@@ -187,8 +188,8 @@ func OtkrijEndpointe() {
 		}
 
 		pretplata := servis.PreuzmiPoKnjiziKorisniku(uint(knjigaId), uint(korisnikId))
-
-		return c.Status(fiber.StatusOK).JSON(pretplata)
+		knjiga, _ := servis.PreuzmiPoId(pretplata.KnjigaId)
+		return c.Status(fiber.StatusOK).JSON(pretplata.MapirajNaDTO(knjiga.Naziv))
 	})
 
 	app.Post("/pretplata", func(c *fiber.Ctx) error {

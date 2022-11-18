@@ -33,7 +33,7 @@ func KreirajPretplatu(pretplata model.Pretplata) error {
 		return errors.New("nedostaju podaci")
 	}
 
-	knjiga, err := repozitorijum.PreuzmiPoId(pretplata.KnjigaId)
+	_, err := repozitorijum.PreuzmiPoId(pretplata.KnjigaId)
 	if err != nil {
 		return err
 	}
@@ -49,8 +49,6 @@ func KreirajPretplatu(pretplata model.Pretplata) error {
 			return errors.New("korisnik je vec pretplacen na ovu knjigu")
 		}
 	}
-
-	pretplata.KnjigaNaziv = knjiga.Naziv
 
 	err = repozitorijum.KreirajPretplatu(pretplata)
 
